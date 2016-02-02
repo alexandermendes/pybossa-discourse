@@ -33,8 +33,9 @@ class PyBossaDiscourse(Plugin):
 
         # Check all settings are provided
         for setting in DISCOURSE_SETTINGS:
-            value = app.config.get(setting)
-            if not value:
+            try:
+                app.config[setting]
+            except KeyError:
                 raise ValueError('{} setting not found.'.format(setting))
 
         # Application specific state
