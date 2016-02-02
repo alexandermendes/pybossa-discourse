@@ -2,7 +2,7 @@
 """SSO module for pybossa-discourse."""
 
 from flask.ext.login import current_user
-from flask import request, url_for, flash, abort
+from flask import request, url_for
 from urllib import urlencode
 import base64
 import hmac
@@ -15,11 +15,10 @@ class DiscourseSSO(object):
     :param app: The PyBossa application.
     """
 
-
     def __init__(self, app):
         discourse = app.extensions['discourse']
-        self.secret = discourse.secret
-        self.domain = discourse.domain
+        self.secret = app.config['DISCOURSE_SECRET']
+        self.domain = app.config['DISCOURSE_DOMAIN']
 
 
     def _validate_payload(self, payload, sig):
@@ -51,6 +50,7 @@ class DiscourseSSO(object):
 
 
     def _get_credentials(self):
+        """Return credentials for the current user."""
         credentials = {
             'nonce': nonce,
             'email': current_user.email,

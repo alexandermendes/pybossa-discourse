@@ -3,29 +3,24 @@
 
 from flask import Blueprint, request, url_for, flash, redirect
 from flask.ext.login import logout_user, current_user
-from pybossa.core import user_repo
-from discourseplugin import discourse_client, discourse_sso
-from discourseplugin import user_repo as discourse_user_repo
+
+discourse_sso = app.extensions['discourse']['sso']
+discourse_client = app.extensions['discourse']['client']
 
 
 def index():
-    """Sign in via SSO then redirect to Discourse."""
+    """Attempt to sign in via SSO then redirect to Discourse."""
     try:
         url = discourse_sso.signin()
     except AttributeError as e:
         flash('Access Denied: {}'.format(str(e)), 'error')
         return redirect(url_for('home.home'))
 
-    if not current_user.is_anonymous():
-        user = user_repo.get_by_name(name=current_user.name)
-        discourse_user_repo.update_notification_count(user, 0)
-
     return redirect(url)
 
 
 def oauth_authorized():
     """Authorise a Discourse login."""
-
     sso = request.args.get('sso')
     sig = request.args.get('sig')
 

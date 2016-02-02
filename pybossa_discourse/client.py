@@ -1,48 +1,40 @@
 # -*- coding: utf8 -*-
-"""Client module for pybossa-discourse."""
+"""Discourse client module for pybossa-discourse."""
 
-import socket
 import uuid
 import requests
-from flask_discourse.exceptions import DiscourseError
+from pybossa.error import ErrorStatus
 
 
 class DiscourseClient(object):
-    """Discourse client class for consuming the Discourse API.
+    """Discourse class to initialise the Flask-Discourse extension.
 
-    :param app: The PyBossa application
+    :param app: The PyBossa application.
     """
 
-
     def __init__(self, app=None):
-        if app:
-            self.init_app(app)
-
-
-    def init_app(self, app):
-        discourse = app.extensions['discourse']
-        self.api_key = discourse.api_key
-        self.api_username = discourse.api_username
-        self.domain = discourse.domain
+        self.domain = app.config['DISCOURSE_DOMAIN']
+        self.api_key = app.config['DISCOURSE_API_KEY']
+        self.api_username = app.config['DISCOURSE_API_USERNAME']
+        self.error_status = ErrorStatus()
 
 
     def _request(self, verb, endpoint, params):
-        """Make an API request."""
+        """Make a request."""
         url = '{0}{1}'.format(self.domain, endpoint)
         params['api_key'] = self.api_key
         params['api_username'] = self.api_username
 
         try:
-            res = requests.request(verb, url, params=params)
+            res = requests.request(verb, endpoint, params=params)
         except requests.RequestException as e:
-            raise DiscourseError(e)
+            return self.error_status.format_exception(e)
 
          # Some API calls return an empty response
         if res.text == " ":
             return None
 
         try:
-            print(res.content)
             decoded = res.json()
         except ValueError as e:
             raise DiscourseError(e)
@@ -51,289 +43,226 @@ class DiscourseClient(object):
 
 
     def _get(self, endpoint, params=dict()):
-        return self._request('GET', endpoint, params)
+        """Make a GET request."""
+        return _request('GET', endpoint, params)
 
 
     def _post(self, endpoint, params=dict()):
-        return self._request('POST', endpoint, params)
+        """Make a POST request."""
+        return _request('POST', endpoint, params)
 
 
     def _put(self, endpoint, params=dict()):
-        return self._request('PUT', endpoint, params)
+        """Make a PUT request."""
+        return _request('PUT', endpoint, params)
 
 
     def _delete(self, endpoint, params=dict()):
-        return self._request('DELETE', endpoint, params)
+        """Make a DELETE request."""
+        return _request('DELETE', endpoint, params)
 
 
-    def categories(self):
+    def _create_user(self):
+        """Create a new Discourse user based on the current users email."""
+        endpoint = '/users'
+        random_name = str(uuid.uuid4().get_hex().upper()[0:15])
+        random_username = str(uuid.uuid4().get_hex().upper()[0:15])
+        params = {'name' : random_name,
+                  'username' : random_username,
+                  'email' : current_user.email_addr,
+                  'password' : 'P@ssword',
+                  'active' : 'true',
+                  }
+        return self._post(endpoint, params)
+
+
+    def _get_username(self):
+        """Return the current user's Discourse username.
+
+        A new Discourse user will be created first, if necessary.
+        """
+        def get_username_response():
+            endpoint = '/admin/users/list/all.json'
+            params = {'filter' : current_user.email_addr}
+            return self._get(endpoint, params)
+
+        res = get_username_response()
+        if len(res) == 0:
+            self._create_user()
+            res = get_username_response()
+
+        return res[0]['username']
+
+
+    def _whitelist_ip(self, ip_address):
+        """Ensure an IP is on the Discourse whitelist.
+
+        :param ip_address: IP address to be added to the Discourse whitelist.
+        """
+        endpoint = "/admin/logs/screened_ip_addresses.json"
+        params = {'ip_address': ip_address, 'action_name': 'do_nothing'}
+        return self._post(enpoint, params)
+
+
+    def _update_setting(self, setting, new_value):
+        """Update a site setting.
+
+        :param setting: The Discourse setting to be updated.
+        :param new_value: The value to be set.
+        """
+        enpoint = "/admin/site_settings/{0}".format(setting)
+        params = {setting: new_value}
+        return self._put(enpoint, params)
+
+
+    def discourse_categories(self):
         """Return all categories."""
-        url = '/categories.json'
-        return self._get(url)
+        endpoint = '/categories.json'
+        return self._get(endpoint)
 
 
-    def category(self, category_id):
+    def discourse_category(self, category_id):
         """Return all topics in a category.
 
         :param category_id: The ID of the category.
         """
-        url = '/c/{0}.json'.format(category_id)
-        return self._get(url)
+        endpoint = '/c/{0}.json'.format(category_id)
+        return self._get(endpoint)
 
 
-    def category_topics_latest(self, category_id):
+    def discourse_category_topics_latest(self, category_id):
         """Return the latest topics in a category.
 
         :param category_id: The ID of the category.
         """
-        url = '/c/{0}/l/latest.json'.format(category_id)
-        return self._get(url)
+        endpoint = '/c/{0}/l/latest.json'.format(category_id)
+        return self._get(endpoint)
 
 
-    def category_topics_new(self, category_id):
+    def discourse_category_topics_new(self, category_id):
         """Return the newest topics in a category.
 
         :param category_id: The ID of the category.
         """
-        url = '/c/{0}/l/new.json'.format(category_id)
-        return self._get(url)
+        endpoint = '/c/{0}/l/new.json'.format(category_id)
+        return self._get(endpoint)
 
 
-    def category_topics_top(self, category_id):
+    def discourse_category_topics_top(self, category_id):
         """Return the top topics in a category.
 
         :param category_id: The ID of the category.
         """
-        url = '/c/{0}/l/top.json'.format(category_id)
-        return self._get(url)
+        endpoint = '/c/{0}/l/top.json'.format(category_id)
+        return self._get(endpoint)
 
 
-    def category_topics_subtopics(self, category_id, parent_category_id):
+    def discourse_category_topics_subtopics(self, category_id, parent_category_id):
         """Return the topics in a sub-category.
 
         :param parent_category_id: The ID of the parent category.
         :param category_id: The ID of the category.
         """
-        url = '/c/{0}/{1}.json'.format(parent_category_id, category_id)
-        return self._get(url)
+        endpoint = '/c/{0}/{1}.json'.format(parent_category_id, category_id)
+        return self._get(endpoint)
 
 
-    def topic(self, topic_id):
+    def discourse_topic(self, topic_id):
         """Return a specific topic.
 
         :param topic_id: The ID of the topic.
         """
-        url = '/t/{0}.json'.format(topic_id)
-        return self._get(url)
+        endpoint = '/t/{0}.json'.format(topic_id)
+        return self._get(endpoint)
 
 
-    def topics_latest(self):
+    def discourse_topics_latest(self):
         """Return the latest topics."""
-        url = '/latest.json'
-        return self._get(url)
+        endpoint = '/latest.json'
+        return self._get(endpoint)
 
 
-    def topics_top(self):
+    def discourse_topics_top(self):
         """Return the top topics."""
-        url = '/top.json'
-        return self._get(url)
+        endpoint = '/top.json'
+        return self._get(endpoint)
 
 
-    def user_details(self, username):
-        """Return a user's details.
-
-        :param username: The user's Discourse username.
-        """
-        url = '/users/{0}.json'.format(username)
-        return self._get(url)
+    def discourse_user_details(self):
+        """Return the current user's details."""
+        username = _get_username()
+        endpoint = '/users/{0}.json'.format(username)
+        return self._get(endpoint)
 
 
-    def user_username(self, email):
-        """Return a user's Discourse username, creating the user if necessary.
-
-        :param email: The user's Discourse email address.
-        """
-        url = '/admin/users/list/all.json'
-        params = {'filter' : user.email}
-        res = self._get(url, params)
-
-        if len(res) == 0:
-            self.create_user(user)
-
-        res = self._get(url, params)
-        return res[0]['username']
-
-
-    def user_id(self, username):
-        """Return a user's Discourse ID.
-
-        :param username: The user's Discourse username.
-        """
-        details = self.user_details(username)
+    def discourse_user_id(self):
+        """Return the current user's Discourse ID."""
+        details = self.user_details()
         user_id = details['user']['id']
         return user_id
 
 
-    def user_title(self, username):
-        """Return a user's title.
+    def discourse_user_title(self):
+        """Return the current user's title."""
+        details = self.user_details()
+        user_id = details['user']['title']
+        return user_id
+
+
+    def discourse_user_activity(self):
+        """Return the current user's recent activity.
 
         :param username: The user's Discourse username.
         """
-        details = self.user_details(username)
-        title = details['user']['title']
-        return title
-
-
-    def update_user_trust_level(self, username, level):
-        """Update a user's trust level.
-
-        :param username: The user's Discourse username.
-        :param level: The trust level to be set for the user.
-        """
-        user_id = self.user_id(user)
-        url = '/admin/users/{0}/trust_level'.format(user_id)
-        params = {'user_id' : user_id, 'level' : level}
-        return self._put(url, params)
-
-
-    def user_activity(self, username):
-        """Return the user's recent activity.
-
-        :param username: The user's Discourse username.
-        """
-        url = '/user_actions.json'
+        username = _get_username()
+        endpoint = '/user_actions.json'
         params = {'username' : username}
-        return self._get(url, params)
+        return self._get(endpoint, params)
 
 
-    def user_messages(self, username):
-        """Return a user's private messages.
-
-        :param username: The user's Discourse username.
-        """
-        url = '/topics/private-messages/{0}.json'.format(username)
-        return self._get(url)
+    def discourse_user_messages(self):
+        """Return the current user's private messages."""
+        username = _get_username()
+        endpoint = '/topics/private-messages/{0}.json'.format(username)
+        return self._get(endpoint)
 
 
-    def user_notifications(self, username):
-        """Return notifications for a user.
-
-        :param username: The user's Discourse username.
-        """
-        url = '/notifications.json'
+    def discourse_user_notifications(self):
+        """Return the current user's notifications."""
+        username = _get_username()
+        endpoint = '/notifications.json'
         params = {'username' : username}
-        return self._get(url, params)
+        return self._get(endpoint, params)
 
 
-    def user_notifications_count(self, username):
-        """Return a count of unread notifications for a user.
-
-        :param username: The user's Discourse username.
-        """
+    def discourse_user_notifications_count(self):
+        """Return a count of unread notifications for the current user."""
+        username = _get_username()
         notifications = self.notifications(username)
         count = sum([1 for n in notifications['notifications']
                      if not n['read']])
         return count
 
 
-    def user_notifications_markread(self, username):
-        """Mark a user's notifications as read.
-
-        :param username: The user's Discourse username.
-        """
-        url = '/notifications/mark-read.json'
-        params = {'username' : username}
-        return self._put(url, params)
-
-
-    def user_signout(self, username):
-        """Log out a user from Discourse.
-
-        :param username: The user's Discourse username.
-        """
+    def discourse_user_signout(self):
+        """Sign out the current user from Discourse."""
+        username = _get_username()
         user_id = self.user_id(username)
-        url = '/admin/users/{0}/log_out'.format(user_id)
-        return self._post(url)
+        endpoint = '/admin/users/{0}/log_out'.format(user_id)
+        return self._post(endpoint)
 
 
-    def user_create(self, email):
-        """Create a new Discourse user based on their email address.
-
-        :param email: The user's email address.
-        """
-        url = '/users'
-        random_name = str(uuid.uuid4().get_hex().upper()[0:15])
-        random_username = str(uuid.uuid4().get_hex().upper()[0:15])
-        params = {'name' : random_name,
-                  'username' : random_username,
-                  'email' : email,
-                  'password' : 'P@ssword',
-                  'active' : 'true',
-                  }
-        return self._post(url, params)
-
-
-    def badges(self):
+    def discourse_badges(self):
         """Return all badges."""
-        url = '/admin/badges.json'
-        return self._get(url)
+        endpoint = '/admin/badges.json'
+        return self._get(endpoint)
 
 
-    def user_badge_grant(self, username, badge_id):
-        """Grant a badge to a user.
-
-        :param username: The user's Discourse username.
-        :param badge_id: The ID of the badge to be granted.
-        """
-        url = '/user_badges'
-        params = {'username' : username, 'badge_id' : badge_id}
-        return self._post(url, params)
-
-
-    def search(self, query):
+    def discourse_search(self, query):
         """Perform a search.
 
         :param query: The search query.
         """
-        url = '/search.json'
+        endpoint = '/search.json'
         params = {'q' : query, 'order' : 'posts', 'ascending' : 'true'}
-        return self._get(url, params)
-
-
-    def admin_server_status(self):
-        """Return the server status."""
-        url = '/srv/status'
-        return self._get(url)
-
-
-    def admin_plugins(self):
-        """Return installed plugins."""
-        url = '/admin/plugins.json'
-        return self._get(url)
-
-
-    def admin_ips_screened(self):
-        """Returns screened IP addresses."""
-        url="/admin/logs/screened_ip_addresses.json"
-        return self._get(url)
-
-
-    def admin_ips_whitelist_update(self, ip_address):
-        """Ensure an IP is on the Discourse whitelist.
-
-        :param ip_address: IP address to be added to the Discourse whitelist.
-        """
-        url="/admin/logs/screened_ip_addresses.json"
-        params = {'ip_address': ip_address, 'action_name': 'do_nothing'}
-        return self._post(url, params)
-
-
-    def admin_setting_update(self, setting, new_value):
-        """Update a site setting.
-
-        :param setting: The Discourse setting to be updated.
-        :param new_value: The value to be set.
-        """
-        url = "/admin/site_settings/{0}".format(setting)
-        params = {setting: new_value}
-        return self._put(url, params)
+        return self._get(endpoint, params)
