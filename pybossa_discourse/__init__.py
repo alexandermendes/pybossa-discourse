@@ -21,7 +21,6 @@ DISCOURSE_SETTINGS = ('DISCOURSE_API_KEY',
                       'DISCOURSE_SECRET',
                       'DISCOURSE_DOMAIN',
                       'DISCOURSE_PYBOSSA_IP',
-                      'DISCOURSE_PYBOSSA_DOMAIN',
                       'DISCOURSE_AUTO_UPDATE_SETTINGS')
 
 
