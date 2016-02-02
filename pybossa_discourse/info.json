@@ -1,0 +1,9 @@
+{
+    "identifier": "pybossa_discourse",
+    "name": "pybossa-discourse",
+    "author": "Alexander Mendes",
+    "website": "https://github.com/alexandermendes/pybossa-discourse",
+    "license": "BSD",
+    "description": "A PyBossa plugin for Discourse integration.",
+    "version": "0.1.0"
+}
