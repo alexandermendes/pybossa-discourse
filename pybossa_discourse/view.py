@@ -2,6 +2,7 @@
 """Views module for pybossa-discourse."""
 
 from flask import Blueprint, request, url_for, flash, redirect
+from flask import current_app as app
 from flask.ext.login import logout_user, current_user
 
 discourse_sso = app.extensions['discourse']['sso']
