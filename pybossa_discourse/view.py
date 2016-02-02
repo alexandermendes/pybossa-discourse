@@ -11,6 +11,7 @@ discourse_client = app.extensions['discourse']['client']
 
 def index():
     """Attempt to sign in via SSO then redirect to Discourse."""
+    discourse_sso = app.extensions['discourse']['sso']
     try:
         url = discourse_sso.signin()
     except AttributeError as e:
@@ -22,6 +23,7 @@ def index():
 
 def oauth_authorized():
     """Authorise a Discourse login."""
+    discourse_sso = app.extensions['discourse']['sso']
     sso = request.args.get('sso')
     sig = request.args.get('sig')
 
@@ -40,6 +42,7 @@ def oauth_authorized():
 
 def signout():
     """Signout the current user from both PyBossa and Discourse."""
+    discourse_client = app.extensions['discourse']['client']
     if not current_user.is_anonymous():
         try:
             discourse_client.log_out(current_user)
