@@ -30,7 +30,7 @@ class DiscourseClient(object):
         except requests.RequestException as e:
             return self.error_status.format_exception(e)
 
-         # Some API calls return an empty response
+        # Some API calls return an empty response
         if res.text == " ":
             return None
 
@@ -67,11 +67,11 @@ class DiscourseClient(object):
         endpoint = '/users'
         random_name = str(uuid.uuid4().get_hex().upper()[0:15])
         random_username = str(uuid.uuid4().get_hex().upper()[0:15])
-        params = {'name' : random_name,
-                  'username' : random_username,
-                  'email' : current_user.email_addr,
-                  'password' : 'P@ssword',
-                  'active' : 'true',
+        params = {'name': random_name,
+                  'username': random_username,
+                  'email': current_user.email_addr,
+                  'password': 'P@ssword',
+                  'active': 'true',
                   }
         return self._post(endpoint, params)
 
@@ -83,7 +83,7 @@ class DiscourseClient(object):
         """
         def get_username_response():
             endpoint = '/admin/users/list/all.json'
-            params = {'filter' : current_user.email_addr}
+            params = {'filter': current_user.email_addr}
             return self._get(endpoint, params)
 
         res = get_username_response()
@@ -157,13 +157,13 @@ class DiscourseClient(object):
         return self._get(endpoint)
 
 
-    def discourse_category_topics_subtopics(self, category_id, parent_category_id):
+    def discourse_category_topics_subtopics(self, category_id, p_category_id):
         """Return the topics in a sub-category.
 
-        :param parent_category_id: The ID of the parent category.
+        :param p_category_id: The ID of the parent category.
         :param category_id: The ID of the category.
         """
-        endpoint = '/c/{0}/{1}.json'.format(parent_category_id, category_id)
+        endpoint = '/c/{0}/{1}.json'.format(p_category_id, category_id)
         return self._get(endpoint)
 
 
@@ -216,7 +216,7 @@ class DiscourseClient(object):
         """
         username = _get_username()
         endpoint = '/user_actions.json'
-        params = {'username' : username}
+        params = {'username': username}
         return self._get(endpoint, params)
 
 
@@ -231,7 +231,7 @@ class DiscourseClient(object):
         """Return the current user's notifications."""
         username = _get_username()
         endpoint = '/notifications.json'
-        params = {'username' : username}
+        params = {'username': username}
         return self._get(endpoint, params)
 
 
@@ -264,5 +264,5 @@ class DiscourseClient(object):
         :param query: The search query.
         """
         endpoint = '/search.json'
-        params = {'q' : query, 'order' : 'posts', 'ascending' : 'true'}
+        params = {'q': query, 'order': 'posts', 'ascending': 'true'}
         return self._get(endpoint, params)

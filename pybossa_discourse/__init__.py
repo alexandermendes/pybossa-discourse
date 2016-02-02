@@ -63,8 +63,9 @@ class PyBossaDiscourse(Plugin):
         """Setup global environment variables."""
         client = app.extensions['discourse']['client']
         methods = inspect.getmembers(client, predicate=inspect.ismethod)
-        non_local_methods = [m[1] for m in methods if not m[0].startswith('_')
-                             and not m[0].startswith('init')]
+        non_local_methods = [m[1] for m in methods
+                             if not m[0].startswith('_') and
+                             not m[0].startswith('init')]
 
         for m in non_local_methods:
             app.jinja_env.globals.update(m=m)
