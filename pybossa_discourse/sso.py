@@ -51,7 +51,7 @@ class DiscourseSSO(object):
         return query_string
 
 
-    def _get_credentials(self):
+    def _get_credentials(self, nonce):
         """Return credentials for the current user."""
         credentials = {'nonce': nonce,
                        'email': current_user.email,
@@ -62,12 +62,10 @@ class DiscourseSSO(object):
                        }
 
         # Add the avatar URL
-        info = current_user.info
-        if (info and 'container' in info and 'avatar' in info):
+        info = current_user.info if current_user.info else {}
+        if ('container' in info and 'avatar' in info):
             root = request.url_root.rstrip('/')
-            filename = '{0}/{1}'.format(current_user.info['container'],
-                                        current_user.info['avatar'])
-
+            filename = '{0}/{1}'.format(info['container'], info['avatar'])
             file_url = url_for('uploads.uploaded_file', filename=filename)
             avatar_details = {'avatar_url': '{0}{1}'.format(root, file_url),
                               'avatar_force_update': 'true'
