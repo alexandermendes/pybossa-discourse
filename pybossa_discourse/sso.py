@@ -2,7 +2,7 @@
 """SSO module for pybossa-discourse."""
 
 from flask.ext.login import current_user
-from flask import request, url_for
+from flask import request, url_for, redirect
 import urllib
 import base64
 import hmac
@@ -43,7 +43,7 @@ class DiscourseSSO(object):
     def _build_return_url(self, nonce):
         """Construct the return url."""
         credentials = self._get_credentials(nonce)
-        return_payload = base64.encodestring(urlencode(credentials))
+        return_payload = base64.encodestring(urllib.urlencode(credentials))
         h = hmac.new(self.secret, return_payload, digestmod=hashlib.sha256)
         query_string = urllib.urlencode({'sso': return_payload,
                                          'sig': h.hexdigest()})
