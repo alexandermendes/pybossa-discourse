@@ -1,4 +1,5 @@
 # -*- coding: utf8 -*-
+"""Main module for pybossa-discourse."""
 
 import socket
 from flask_discourse.blueprint import DiscourseBlueprint
@@ -9,14 +10,15 @@ from flask_discourse.sso import DiscourseSSO
 DISCOURSE_SETTINGS = ('DISCOURSE_API_KEY',
                       'DISCOURSE_API_USERNAME',
                       'DISCOURSE_SECRET',
-                      'DISCOURSE_DOMAIN')
+                      'DISCOURSE_DOMAIN',
+                      'DISCOURSE_PYBOSSA_IP',
+                      'DISCOURSE_PYBOSSA_DOMAIN')
 
 
 class Discourse(object):
     """Discourse class to initialise the Flask-Discourse extension.
 
-    Args:
-        app : The Flask application.
+    :param app: The PyBossa application.
     """
 
     def __init__(self, app=None):
@@ -28,10 +30,8 @@ class Discourse(object):
     def init_app(self, app):
         """Initialise the extension.
 
-        Args:
-            app : The Flask application.
+        :param app: The PyBossa application.
         """
-        app.extensions['discourse'] = self
 
         for setting in DISCOURSE_SETTINGS:
             value = app.config.get(setting)
@@ -41,37 +41,14 @@ class Discourse(object):
             # Store settings as variables
             name = setting.replace("DISCOURSE_", "", 1).lower()
             setattr(self, name, value)
+        
+        app.extensions['discourse'] = self
 
         self.client = DiscourseClient(app)
         self.sso = DiscourseSSO(app)
 
-        self.local_ip = self.get_ip()
-        self.register_blueprint(app)
+        self.local_ip = app.config['PYBOSSA_IP']
         self.configure_discourse()
-
-
-    def register_blueprint(self, app, *args, **kwargs):
-        """Register the Discourse blueprint.
-
-        Args:
-            app : The Flask application.
-            *args: Variable length argument list.
-            **kwargs: Arbitrary keyword arguments.
-        """
-        blueprint = DiscourseBlueprint()
-        app.register_blueprint(blueprint, *args, **kwargs)
-
-
-    def get_ip(self):
-        """Return the IP address of the Flask application.
-
-        Returns:
-            The IP address where the Flask application is hosted.
-        """
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(('8.8.8.8', 80))
-        ip = s.getsockname()[0]
-        return ip
 
 
     def configure_discourse(self):

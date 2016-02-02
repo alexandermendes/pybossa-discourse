@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-"""Client module for consuming with the Discourse API."""
+"""Client module for pybossa-discourse."""
 
 import socket
 import uuid
@@ -8,14 +8,17 @@ from flask_discourse.exceptions import DiscourseError
 
 
 class DiscourseClient(object):
-    """Discourse client class for consuming the Discourse API."""
+    """Discourse client class for consuming the Discourse API.
+
+    :param app: The PyBossa application
+    """
 
 
     def __init__(self, app=None):
-        """Initialise."""
         if app:
             self.init_app(app)
-    
+
+
     def init_app(self, app):
         discourse = app.extensions['discourse']
         self.api_key = discourse.api_key
@@ -33,7 +36,7 @@ class DiscourseClient(object):
             res = requests.request(verb, url, params=params)
         except requests.RequestException as e:
             raise DiscourseError(e)
-        
+
          # Some API calls return an empty response
         if res.text == " ":
             return None
@@ -72,10 +75,7 @@ class DiscourseClient(object):
     def category(self, category_id):
         """Return all topics in a category.
 
-        Parameters
-        ----------
-        category_id : int
-            The ID of the category.
+        :param category_id: The ID of the category.
         """
         url = '/c/{0}.json'.format(category_id)
         return self._get(url)
@@ -84,10 +84,7 @@ class DiscourseClient(object):
     def category_topics_latest(self, category_id):
         """Return the latest topics in a category.
 
-        Parameters
-        ----------
-        category_id : int
-            The ID of the category.
+        :param category_id: The ID of the category.
         """
         url = '/c/{0}/l/latest.json'.format(category_id)
         return self._get(url)
@@ -96,10 +93,7 @@ class DiscourseClient(object):
     def category_topics_new(self, category_id):
         """Return the newest topics in a category.
 
-        Parameters
-        ----------
-        category_id : int
-            The ID of the category.
+        :param category_id: The ID of the category.
         """
         url = '/c/{0}/l/new.json'.format(category_id)
         return self._get(url)
@@ -108,10 +102,7 @@ class DiscourseClient(object):
     def category_topics_top(self, category_id):
         """Return the top topics in a category.
 
-        Parameters
-        ----------
-        category_id : int
-            The ID of the category.
+        :param category_id: The ID of the category.
         """
         url = '/c/{0}/l/top.json'.format(category_id)
         return self._get(url)
@@ -120,28 +111,21 @@ class DiscourseClient(object):
     def category_topics_subtopics(self, category_id, parent_category_id):
         """Return the topics in a sub-category.
 
-        Parameters
-        ----------
-        parent_category_id : int
-            The ID of the parent category.
-        category_id : int
-            The ID of the sub-category.
+        :param parent_category_id: The ID of the parent category.
+        :param category_id: The ID of the category.
         """
         url = '/c/{0}/{1}.json'.format(parent_category_id, category_id)
         return self._get(url)
 
-    
+
     def topic(self, topic_id):
         """Return a specific topic.
 
-        Parameters
-        ----------
-        topic_id : int
-            The ID of the topic.
+        :param topic_id: The ID of the topic.
         """
         url = '/t/{0}.json'.format(topic_id)
         return self._get(url)
-    
+
 
     def topics_latest(self):
         """Return the latest topics."""
@@ -155,25 +139,19 @@ class DiscourseClient(object):
         return self._get(url)
 
 
-    def user_details(self, user):
+    def user_details(self, username):
         """Return a user's details.
 
-        Parameters
-        ----------
-        user : str
-            The user's Discourse username.
+        :param username: The user's Discourse username.
         """
-        url = '/users/{0}.json'.format(user)
+        url = '/users/{0}.json'.format(username)
         return self._get(url)
 
 
     def user_username(self, email):
         """Return a user's Discourse username, creating the user if necessary.
 
-        Parameters
-        ----------
-        email : str
-            The user's Discourse email address.
+        :param email: The user's Discourse email address.
         """
         url = '/admin/users/list/all.json'
         params = {'filter' : user.email}
@@ -186,41 +164,31 @@ class DiscourseClient(object):
         return res[0]['username']
 
 
-    def user_id(self, user):
+    def user_id(self, username):
         """Return a user's Discourse ID.
 
-        Parameters
-        ----------
-        user : str
-            The user's Discourse username.
+        :param username: The user's Discourse username.
         """
-        details = self.user_details(user)
+        details = self.user_details(username)
         user_id = details['user']['id']
         return user_id
 
 
-    def user_title(self, user):
+    def user_title(self, username):
         """Return a user's title.
 
-        Parameters
-        ----------
-        user : str
-            The user's Discourse username.
+        :param username: The user's Discourse username.
         """
-        details = self.user_details(user)
+        details = self.user_details(username)
         title = details['user']['title']
         return title
 
 
-    def update_user_trust_level(self, user, level):
+    def update_user_trust_level(self, username, level):
         """Update a user's trust level.
 
-        Parameters
-        ----------
-        user : str
-            The user's Discourse username.
-        level : int
-            The trust level to be set for the user.
+        :param username: The user's Discourse username.
+        :param level: The trust level to be set for the user.
         """
         user_id = self.user_id(user)
         url = '/admin/users/{0}/trust_level'.format(user_id)
@@ -228,80 +196,62 @@ class DiscourseClient(object):
         return self._put(url, params)
 
 
-    def user_activity(self, user):
+    def user_activity(self, username):
         """Return the user's recent activity.
 
-        Parameters
-        ----------
-        user : str
-            The user's Discourse username.
+        :param username: The user's Discourse username.
         """
         url = '/user_actions.json'
-        params = {'username' : user}
+        params = {'username' : username}
         return self._get(url, params)
 
 
-    def user_messages(self, user):
+    def user_messages(self, username):
         """Return a user's private messages.
 
-        Parameters
-        ----------
-        user : str
-            The user's Discourse username.
+        :param username: The user's Discourse username.
         """
-        url = '/topics/private-messages/{0}.json'.format(user)
+        url = '/topics/private-messages/{0}.json'.format(username)
         return self._get(url)
 
 
-    def user_notifications(self, user):
+    def user_notifications(self, username):
         """Return notifications for a user.
 
-        Parameters
-        ----------
-        user : str
-            The user's Discourse username.
+        :param username: The user's Discourse username.
         """
         url = '/notifications.json'
-        params = {'username' : user}
+        params = {'username' : username}
         return self._get(url, params)
 
 
-    def user_notifications_count(self, user):
+    def user_notifications_count(self, username):
         """Return a count of unread notifications for a user.
 
-        Parameters
-        ----------
-        user : str
-            The user's Discourse username.
+        :param username: The user's Discourse username.
         """
-        notifications = self.notifications(user)
+        notifications = self.notifications(username)
         count = sum([1 for n in notifications['notifications']
                      if not n['read']])
         return count
 
 
-    def user_notifications_markread(self, user):
+    def user_notifications_markread(self, username):
         """Mark a user's notifications as read.
 
-        Parameters
-        ----------
-        user : str
-            The user's Discourse username.
+        :param username: The user's Discourse username.
         """
         url = '/notifications/mark-read.json'
-        params = {'username' : user}
+        params = {'username' : username}
         return self._put(url, params)
 
 
-    def user_signout(self, user):
+    def user_signout(self, username):
         """Log out a user from Discourse.
 
-        Parameters
-        ----------
-        user : str
-            The user's Discourse username.
+        :param username: The user's Discourse username.
         """
-        user_id = self.user_id(user)
+        user_id = self.user_id(username)
         url = '/admin/users/{0}/log_out'.format(user_id)
         return self._post(url)
 
@@ -309,10 +259,7 @@ class DiscourseClient(object):
     def user_create(self, email):
         """Create a new Discourse user based on their email address.
 
-        Parameters
-        ----------
-        email : str
-            The user's email address.
+        :param email: The user's email address.
         """
         url = '/users'
         random_name = str(uuid.uuid4().get_hex().upper()[0:15])
@@ -332,28 +279,21 @@ class DiscourseClient(object):
         return self._get(url)
 
 
-    def user_badge_grant(self, user, badge_id):
+    def user_badge_grant(self, username, badge_id):
         """Grant a badge to a user.
 
-        Parameters
-        ----------
-        user : str
-            The user's Discourse username.
-        badge_id : int
-            The ID of the badge to be granted.
+        :param username: The user's Discourse username.
+        :param badge_id: The ID of the badge to be granted.
         """
         url = '/user_badges'
-        params = {'username' : user, 'badge_id' : badge_id}
+        params = {'username' : username, 'badge_id' : badge_id}
         return self._post(url, params)
 
 
     def search(self, query):
-        """Search for a given query.
+        """Perform a search.
 
-        Parameters
-        ----------
-        query : str
-            The query to search for.
+        :param query: The search query.
         """
         url = '/search.json'
         params = {'q' : query, 'order' : 'posts', 'ascending' : 'true'}
@@ -381,10 +321,7 @@ class DiscourseClient(object):
     def admin_ips_whitelist_update(self, ip_address):
         """Ensure an IP is on the Discourse whitelist.
 
-        Parameters
-        ----------
-        ip_address : str
-            The IP address to be added to the Discourse whitelist.
+        :param ip_address: IP address to be added to the Discourse whitelist.
         """
         url="/admin/logs/screened_ip_addresses.json"
         params = {'ip_address': ip_address, 'action_name': 'do_nothing'}
@@ -394,12 +331,8 @@ class DiscourseClient(object):
     def admin_setting_update(self, setting, new_value):
         """Update a site setting.
 
-        Parameters
-        ----------
-        setting : str
-            The Discourse setting to be updated.
-        new_value : str
-            The value to be set.
+        :param setting: The Discourse setting to be updated.
+        :param new_value: The value to be set.
         """
         url = "/admin/site_settings/{0}".format(setting)
         params = {setting: new_value}

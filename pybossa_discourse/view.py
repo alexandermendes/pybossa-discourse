@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-"""Views for the Discourse Pybossa Plugin."""
+"""Views module for pybossa-discourse."""
 
 from flask import Blueprint, request, url_for, flash, redirect
 from flask.ext.login import logout_user, current_user
@@ -24,7 +24,7 @@ def index():
 
 
 def oauth_authorized():
-    """Authorise Discourse login."""
+    """Authorise a Discourse login."""
 
     sso = request.args.get('sso')
     sig = request.args.get('sig')

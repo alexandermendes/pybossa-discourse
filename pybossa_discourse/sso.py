@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-"""SSO module for Flask-Discourse."""
+"""SSO module for pybossa-discourse."""
 
 from flask.ext.login import current_user
 from flask import request, url_for, flash, abort
@@ -10,11 +10,13 @@ import hashlib
 
 
 class DiscourseSSO(object):
-    """DiscourseSSO class for handling Discourse single sign-on."""
+    """Discourse SSO class for handling Discourse single sign-on.
+
+    :param app: The PyBossa application.
+    """
 
 
     def __init__(self, app):
-        """Configuration."""
         discourse = app.extensions['discourse']
         self.secret = discourse.secret
         self.domain = discourse.domain
@@ -58,7 +60,7 @@ class DiscourseSSO(object):
             'sso_secret': self.secret
             }
 
-        # Add the URL of the avatar, if any
+        # Add the avatar URL
         info = current_user.info
         if (info and 'container' in info and 'avatar' in info):
             root = request.url_root.rstrip('/')
@@ -70,23 +72,15 @@ class DiscourseSSO(object):
                               'avatar_force_update': 'true'
                               }
             credentials.update(avatar_details)
-        
+
         return credentials
 
 
     def validate(self, payload, sig):
         """Validate payload and return SSO url.
 
-        Parameters
-        ----------
-        payload : str
-            The inbound payload.
-        sig : str
-            The signature.
-
-        Returns
-        -------
-            The SSO login URL.
+        :param payload: The inbound payload.
+        :param sig: The signature.
         """
         nonce = self._validate_payload(payload, sig)
         payload = self._build_return_url(nonce)
@@ -98,11 +92,8 @@ class DiscourseSSO(object):
     def signin(self):
         """Signin to Discourse via SSO, if the current user is not anonymous.
 
-        Returns
-        -------
-        str
-            The Discourse SSO URL if the current user is not anonymous and the
-            root Discourse URL otherwise.
+        :returns: Redirect to the Discourse SSO URL, or the PyBossa root URL
+        if the current user is anonymous.
         """
         if current_user.is_anonymous():
             return redirect(self.domain)

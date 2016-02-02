@@ -15,7 +15,7 @@ __version__ = "0.1.0"
 
 
 class PyBossaDiscourse(Plugin):
-    """PyBossa data plugin class."""
+    """PyBossa Discourse plugin class."""
 
 
     def setup(self):

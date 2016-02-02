@@ -1,15 +1,17 @@
 # -*- coding: utf8 -*-
+"""Blueprint module for pybossa-discourse."""
 
 import inspect
 from flask import Blueprint, current_app
 
 
 class DiscourseBlueprint(Blueprint):
-    """Blueprint to enable Discourse API and SSO support for Flask projects."""
+    """Blueprint to enable Discourse API and SSO support for Flask projects.
 
+    :param ``**kwargs``: Arbitrary keyword arguments.
+    """
 
     def __init__(self, **kwargs):
-        """Initialize blueprint instance and add all necessary URL to it. """
         defaults = {'name': 'discourse', 'import_name': __name__}
         defaults.update(kwargs)
 
@@ -31,7 +33,7 @@ class DiscourseBlueprint(Blueprint):
             methods = inspect.getmembers(inst, predicate=inspect.ismethod)
             non_local_methods = [m for m in methods if not m[0].startswith('_')
                                  and not m[0].startswith('init')]
-            
+
             for m in non_local_methods:
 
                 # Format the URL
@@ -39,7 +41,7 @@ class DiscourseBlueprint(Blueprint):
                 args = inspect.getargspec(m[1])
                 args = [a for a in inspect.getargspec(m[1]).args
                         if a is not 'self']
-                
+
                 for arg in args:
                     arg_base = arg.split('_')[0]
                     url_arg = '<{}>'.format(arg)
