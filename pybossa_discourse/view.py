@@ -5,9 +5,6 @@ from flask import Blueprint, request, url_for, flash, redirect
 from flask import current_app as app
 from flask.ext.login import logout_user, current_user
 
-discourse_sso = app.extensions['discourse']['sso']
-discourse_client = app.extensions['discourse']['client']
-
 
 def index():
     """Attempt to sign in via SSO then redirect to Discourse."""
