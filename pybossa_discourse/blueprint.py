@@ -17,6 +17,6 @@ class DiscourseBlueprint(Blueprint):
 
         super(DiscourseBlueprint, self).__init__(**defaults)
 
-        self.add_url_rule('/index', view_func=view.index)
-        self.add_url_rule('/oauth_authorized', view_func=view.oauth_authorized)
-        self.add_url_rule('signout', view_func=view.signout)
+        self.add_url_rule('/index', view_func=index)
+        self.add_url_rule('/oauth_authorized', view_func=oauth_authorized)
+        self.add_url_rule('signout', view_func=signout)
