@@ -3,7 +3,7 @@
 
 from flask.ext.login import current_user
 from flask import request, url_for
-from urllib import urlencode
+import urllib
 import base64
 import hmac
 import hashlib
@@ -23,6 +23,7 @@ class DiscourseSSO(object):
 
     def _validate_payload(self, payload, sig):
         """Validate an SSO payload."""
+        payload = urllib.unquote(payload)
         decoded = base64.decodestring(payload)
 
         if not payload or not sig or 'nonce' not in decoded:
@@ -44,7 +45,8 @@ class DiscourseSSO(object):
         credentials = self._get_credentials(nonce)
         return_payload = base64.encodestring(urlencode(credentials))
         h = hmac.new(self.secret, return_payload, digestmod=hashlib.sha256)
-        query_string = urlencode({'sso': return_payload, 'sig': h.hexdigest()})
+        query_string = urllib.urlencode({'sso': return_payload,
+                                         'sig': h.hexdigest()})
 
         return query_string
 
