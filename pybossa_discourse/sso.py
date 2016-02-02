@@ -62,8 +62,8 @@ class DiscourseSSO(object):
                        }
 
         # Add the avatar URL
-        info = current_user.info if current_user.info else {}
-        if ('container' in info and 'avatar' in info):
+        info = current_user.info
+        if info.get('container') and info.get('avatar'):
             root = request.url_root.rstrip('/')
             filename = '{0}/{1}'.format(info['container'], info['avatar'])
             file_url = url_for('uploads.uploaded_file', filename=filename)
@@ -91,7 +91,7 @@ class DiscourseSSO(object):
     def signin(self):
         """Signin to Discourse via SSO, if the current user is not anonymous.
 
-        :returns: Redirect to the Discourse SSO URL, or the PyBossa root URL
+        :returns: Redirect to the Discourse SSO URL, or the Discourse base URL
         if the current user is anonymous.
         """
         if current_user.is_anonymous():
