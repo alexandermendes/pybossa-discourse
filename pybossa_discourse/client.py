@@ -222,7 +222,7 @@ class DiscourseClient(object):
         return self._get(endpoint, params)
 
 
-    def discourse_user_notifications_count(self):
+    def discourse_user_unread_notifications_count(self):
         """Return a count of unread notifications for the current user."""
         username = self._get_username()
         notifications = self.notifications(username)
