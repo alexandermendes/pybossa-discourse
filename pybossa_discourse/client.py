@@ -27,7 +27,7 @@ class DiscourseClient(object):
         params['api_username'] = self.api_username
 
         try:
-            res = requests.request(verb, endpoint, params=params)
+            res = requests.request(verb, url, params=params)
         except requests.RequestException as e:  # pragma: no cover
             return self.error_status.format_exception(e, target=endpoint,
                                                       action=verb)
