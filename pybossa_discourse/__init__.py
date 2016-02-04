@@ -42,7 +42,7 @@ class PyBossaDiscourse(Plugin):
 
         self.setup_client()
         self.setup_sso()
-        self.setup_global_envars()
+        self.setup_global_envar()
         self.setup_blueprint()
         if app.config['DISCOURSE_AUTO_UPDATE_SETTINGS']:
             self.setup_discourse()
