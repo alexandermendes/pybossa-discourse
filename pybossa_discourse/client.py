@@ -78,6 +78,9 @@ class DiscourseClient(object):
 
         A new Discourse user will be created first, if necessary.
         """
+        if current_user.is_anonymous():
+            return None
+
         def get_username_response():
             endpoint = '/admin/users/list/all.json'
             params = {'filter': current_user.email_addr}
@@ -188,6 +191,9 @@ class DiscourseClient(object):
     def user_details(self):
         """Return the current user's details."""
         username = self._get_username()
+        if not username:
+            return None
+
         endpoint = '/users/{0}.json'.format(username)
         return self._get(endpoint)
 
@@ -198,6 +204,9 @@ class DiscourseClient(object):
         :param username: The user's Discourse username.
         """
         username = self._get_username()
+        if not username:
+            return None
+
         endpoint = '/user_actions.json'
         params = {'username': username}
         return self._get(endpoint, params)
@@ -206,6 +215,9 @@ class DiscourseClient(object):
     def user_messages(self):
         """Return the current user's private messages."""
         username = self._get_username()
+        if not username:
+            return None
+
         endpoint = '/topics/private-messages/{0}.json'.format(username)
         return self._get(endpoint)
 
@@ -213,6 +225,9 @@ class DiscourseClient(object):
     def user_notifications(self):
         """Return the current user's notifications."""
         username = self._get_username()
+        if not username:
+            return None
+
         endpoint = '/notifications.json'
         params = {'username': username}
         return self._get(endpoint, params)
@@ -221,6 +236,9 @@ class DiscourseClient(object):
     def user_unread_notifications_count(self):
         """Return a count of unread notifications for the current user."""
         username = self._get_username()
+        if not username:
+            return None
+
         notifications = self.user_notifications()
         count = sum([1 for n in notifications['notifications']
                      if not n['read']])
@@ -230,6 +248,9 @@ class DiscourseClient(object):
     def user_signout(self):
         """Sign out the current user from Discourse."""
         details = self.user_details()
+        if not details:
+            return None
+
         user_id = details['user']['id']
         endpoint = '/admin/users/{0}/log_out'.format(user_id)
         return self._post(endpoint)
