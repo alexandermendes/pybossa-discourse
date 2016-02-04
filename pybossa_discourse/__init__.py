@@ -7,7 +7,6 @@ A PyBossa plugin for Discourse integration.
 """
 
 import os
-import inspect
 from flask import current_app as app
 from flask.ext.plugins import Plugin
 from .client import DiscourseClient
@@ -59,17 +58,11 @@ class PyBossaDiscourse(Plugin):
         app.extensions['discourse']['sso'] = DiscourseSSO(app)
 
 
-    def setup_global_envars(self):
-        """Setup global environment variables."""
+    def setup_global_envar(self):
+        """Setup global environment variable."""
         client = app.extensions['discourse']['client']
-        methods = inspect.getmembers(client, predicate=inspect.ismethod)
-        non_local_methods = [m for m in methods
-                             if not m[0].startswith('_') and
-                             not m[0].startswith('init')]
+        app.jinja_env.globals.update(discourse=client)
 
-        for m in non_local_methods:
-            key = 'discourse_{0}'.format(m[0])
-            app.jinja_env.globals.update({key: m[1]})
 
 
     def setup_blueprint(self):
