@@ -88,11 +88,11 @@ class DiscourseClient(object):
             return self._get(endpoint, params)
 
         res = get_username_response()
-        if len(res) == 0:
+        if len(res.content) == 0:
             self._create_user()
             res = get_username_response()
 
-        return res[0]['username']
+        return res.content[0]['username']
 
 
     def _whitelist_ip(self, ip_address):
