@@ -82,20 +82,21 @@ class TestSSO(Test):
 
     @patch('pybossa_discourse.sso.redirect', return_value=True)
     @patch('pybossa_discourse.sso.current_user', return_value=mock_user)
-    def test_anonymous_users_redirected_to_base_url(self, mock_user,
-                                                    mock_redirect):
+    def test_base_url_returned_to_anonymous_users_on_sign_in(self, mock_user,
+                                                             mock_redirect):
         mock_user.is_anonymous.return_value = True
         res = self.sso.signin()
 
-        assert mock_redirect.called_with(self.domain)
+        assert res == self.domain
 
 
     @patch('pybossa_discourse.sso.redirect', return_value=True)
     @patch('pybossa_discourse.sso.current_user', return_value=mock_user)
-    def test_authenticated_users_redirected_to_sso_url(self, mock_user,
-                                                       mock_redirect):
+    def test_sso_url_returned_to_authenticated_users_on_sign_in(self,
+                                                                mock_user,
+                                                                mock_redirect):
         mock_user.is_anonymous.return_value = False
         url = '{0}/session/sso?return_path=%2F'.format(self.domain)
         res = self.sso.signin()
 
-        assert mock_redirect.called_with(url)
+        assert res == url
