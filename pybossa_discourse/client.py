@@ -3,6 +3,7 @@
 
 import uuid
 import requests
+from flask.ext.login import current_user
 from pybossa.error import ErrorStatus
 
 
