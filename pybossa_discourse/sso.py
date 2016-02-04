@@ -40,7 +40,7 @@ class DiscourseSSO(object):
         return nonce
 
 
-    def _build_return_url(self, nonce):
+    def _build_return_payload(self, nonce):
         """Construct the return url."""
         credentials = self._get_credentials(nonce)
         return_payload = base64.encodestring(urllib.urlencode(credentials))
@@ -82,7 +82,7 @@ class DiscourseSSO(object):
         :param sig: The signature.
         """
         nonce = self._validate_payload(payload, sig)
-        payload = self._build_return_url(nonce)
+        payload = self._build_return_payload(nonce)
         url = '{0}/session/sso_login?{1}'.format(self.domain, payload)
 
         return url
