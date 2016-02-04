@@ -3,19 +3,17 @@
 
 from flask import Blueprint, request, url_for, flash, redirect
 from flask import current_app as app
-from flask.ext.login import logout_user, current_user
+from flask.ext.login import current_user
 
 
 def index():
     """Attempt to sign in via SSO then redirect to Discourse."""
     discourse_sso = app.extensions['discourse']['sso']
     try:
-        url = discourse_sso.signin()
-    except AttributeError as e:
-        flash('Access Denied: {}'.format(str(e)), 'error')
+        return redirect(discourse_sso.signin())
+    except AttributeError as e:  # pragma: no cover
+        flash('Access Denied: {0}'.format(str(e)), 'error')
         return redirect(url_for('home.home'))
-
-    return redirect(url)
 
 
 def oauth_authorized():
@@ -29,12 +27,10 @@ def oauth_authorized():
         return redirect(url_for('account.signin', next=next_url))
 
     try:
-        url = discourse_sso.validate(sso, sig)
-    except (ValueError, AttributeError) as e:
+        return redirect(discourse_sso.validate(sso, sig))
+    except (ValueError, AttributeError) as e:  # pragma: no cover
         flash('Access Denied: {0}'.format(str(e)), 'error')
         return redirect(url_for('home.home'))
-
-    return redirect(url)
 
 
 def signout():
@@ -43,10 +39,6 @@ def signout():
     if not current_user.is_anonymous():
         try:
             discourse_client.log_out(current_user)
-        except (ValueError, AttributeError) as e:
-            msg = 'Discourse Logout Failed: {0}'.format(str(e))
-            flash(msg, 'error')
-        logout_user()
-        flash('You are now signed out', 'success')
-
-    return redirect(url_for('home.home'))
+        except (ValueError, AttributeError) as e:  # pragma: no cover
+            flash('Discourse Logout Failed: {0}'.format(str(e)), 'error')
+    return redirect(url_for('account.signout'))

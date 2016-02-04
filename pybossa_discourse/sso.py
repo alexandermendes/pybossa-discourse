@@ -95,7 +95,6 @@ class DiscourseSSO(object):
         if the current user is anonymous.
         """
         if current_user.is_anonymous():
-            return redirect(self.domain)
+            return self.domain
 
-        url = '{0}/session/sso?return_path=%2F'.format(self.domain)
-        return redirect(url)
+        return '{0}/session/sso?return_path=%2F'.format(self.domain)
