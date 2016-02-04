@@ -52,6 +52,11 @@ class DiscourseClient(object):
         return self._request('POST', endpoint, params)
 
 
+    def _put(self, endpoint, params=dict()):
+        """Make a PUT request."""
+        return self._request('PUT', endpoint, params)
+
+
     def _create_user(self):
         """Create a new Discourse user based on the current users email."""
         endpoint = '/users'
