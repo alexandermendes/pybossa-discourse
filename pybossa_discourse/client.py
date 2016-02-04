@@ -225,7 +225,7 @@ class DiscourseClient(object):
     def discourse_user_unread_notifications_count(self):
         """Return a count of unread notifications for the current user."""
         username = self._get_username()
-        notifications = self.notifications(username)
+        notifications = self.discourse_user_notifications()
         count = sum([1 for n in notifications['notifications']
                      if not n['read']])
         return count
