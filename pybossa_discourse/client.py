@@ -191,7 +191,7 @@ class DiscourseClient(object):
 
     def discourse_user_details(self):
         """Return the current user's details."""
-        username = _get_username()
+        username = self._get_username()
         endpoint = '/users/{0}.json'.format(username)
         return self._get(endpoint)
 
@@ -215,7 +215,7 @@ class DiscourseClient(object):
 
         :param username: The user's Discourse username.
         """
-        username = _get_username()
+        username = self._get_username()
         endpoint = '/user_actions.json'
         params = {'username': username}
         return self._get(endpoint, params)
@@ -223,14 +223,14 @@ class DiscourseClient(object):
 
     def discourse_user_messages(self):
         """Return the current user's private messages."""
-        username = _get_username()
+        username = self._get_username()
         endpoint = '/topics/private-messages/{0}.json'.format(username)
         return self._get(endpoint)
 
 
     def discourse_user_notifications(self):
         """Return the current user's notifications."""
-        username = _get_username()
+        username = self._get_username()
         endpoint = '/notifications.json'
         params = {'username': username}
         return self._get(endpoint, params)
@@ -238,7 +238,7 @@ class DiscourseClient(object):
 
     def discourse_user_notifications_count(self):
         """Return a count of unread notifications for the current user."""
-        username = _get_username()
+        username = self._get_username()
         notifications = self.notifications(username)
         count = sum([1 for n in notifications['notifications']
                      if not n['read']])
@@ -247,7 +247,7 @@ class DiscourseClient(object):
 
     def discourse_user_signout(self):
         """Sign out the current user from Discourse."""
-        username = _get_username()
+        username = self._get_username()
         user_id = self.user_id(username)
         endpoint = '/admin/users/{0}/log_out'.format(user_id)
         return self._post(endpoint)
