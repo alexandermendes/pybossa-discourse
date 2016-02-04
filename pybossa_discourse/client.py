@@ -31,7 +31,7 @@ class DiscourseClient(object):
             return self.error_status.format_exception(e)
 
         # Some API calls return an empty response
-        if len(strip(res.text)) == 0:
+        if len(res.text.strip()) == 0:
             return None
 
         try:
