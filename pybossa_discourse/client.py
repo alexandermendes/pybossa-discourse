@@ -44,22 +44,22 @@ class DiscourseClient(object):
 
     def _get(self, endpoint, params=dict()):
         """Make a GET request."""
-        return _request('GET', endpoint, params)
+        return self._request('GET', endpoint, params)
 
 
     def _post(self, endpoint, params=dict()):
         """Make a POST request."""
-        return _request('POST', endpoint, params)
+        return self._request('POST', endpoint, params)
 
 
     def _put(self, endpoint, params=dict()):
         """Make a PUT request."""
-        return _request('PUT', endpoint, params)
+        return self._request('PUT', endpoint, params)
 
 
     def _delete(self, endpoint, params=dict()):
         """Make a DELETE request."""
-        return _request('DELETE', endpoint, params)
+        return self._request('DELETE', endpoint, params)
 
 
     def _create_user(self):
