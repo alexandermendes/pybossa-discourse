@@ -91,7 +91,7 @@ class DiscourseClient(object):
         """
         endpoint = "/admin/logs/screened_ip_addresses.json"
         params = {'ip_address': ip_address, 'action_name': 'do_nothing'}
-        return self._post(enpoint, params)
+        return self._post(endpoint, params)
 
 
     def _update_setting(self, setting, new_value):
@@ -102,7 +102,7 @@ class DiscourseClient(object):
         """
         enpoint = "/admin/site_settings/{0}".format(setting)
         params = {setting: new_value}
-        return self._put(enpoint, params)
+        return self._put(endpoint, params)
 
 
     def discourse_categories(self):
