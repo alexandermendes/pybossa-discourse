@@ -28,17 +28,16 @@ class DiscourseClient(object):
 
         try:
             res = requests.request(verb, endpoint, params=params)
-        except requests.RequestException as e:
+        except requests.RequestException as e:  # pragma: no cover
             return self.error_status.format_exception(e)
 
-        # Some API calls return an empty response
-        if len(res.content.strip()) == 0:
+        if len(res.content.strip()) == 0:  # pragma: no cover
             return None
 
         try:
             decoded = res.json()
-        except ValueError as e:
-            raise DiscourseError(e)
+        except ValueError as e:  # pragma: no cover
+            return self.error_status.format_exception(e)
 
         return decoded
 
@@ -233,8 +232,8 @@ class DiscourseClient(object):
 
     def discourse_user_signout(self):
         """Sign out the current user from Discourse."""
-        username = self._get_username()
-        user_id = self.user_id(username)
+        details = self.discourse_user_details()
+        user_id = details['user']['id']
         endpoint = '/admin/users/{0}/log_out'.format(user_id)
         return self._post(endpoint)
 
