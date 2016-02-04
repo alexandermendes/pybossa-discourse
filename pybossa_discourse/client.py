@@ -105,7 +105,7 @@ class DiscourseClient(object):
         :param setting: The Discourse setting to be updated.
         :param new_value: The value to be set.
         """
-        enpoint = "/admin/site_settings/{0}".format(setting)
+        endpoint = "/admin/site_settings/{0}".format(setting)
         params = {setting: new_value}
         return self._put(endpoint, params)
 
