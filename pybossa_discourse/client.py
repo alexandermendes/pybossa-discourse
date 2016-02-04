@@ -29,7 +29,8 @@ class DiscourseClient(object):
         try:
             res = requests.request(verb, endpoint, params=params)
         except requests.RequestException as e:  # pragma: no cover
-            return self.error_status.format_exception(e)
+            return self.error_status.format_exception(e, target=endpoint,
+                                                      action=verb)
 
         if len(res.content.strip()) == 0:  # pragma: no cover
             return None
@@ -37,7 +38,8 @@ class DiscourseClient(object):
         try:
             decoded = res.json()
         except ValueError as e:  # pragma: no cover
-            return self.error_status.format_exception(e)
+            return self.error_status.format_exception(e, target=endpoint,
+                                                      action=verb)
 
         return decoded
 
