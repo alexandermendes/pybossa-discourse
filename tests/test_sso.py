@@ -62,7 +62,7 @@ class TestSSO(Test):
             mock_request.url_root = mock_root
 
         creds = self.sso._get_credentials(self.nonce)
-        expected = {'nonce': self.nonce, 'email': mock_user.email,
+        expected = {'nonce': self.nonce, 'email': mock_user.email_addr,
                     'name': mock_user.fullname, 'username': mock_user.name,
                     'external_id': mock_user.id, 'sso_secret': self.secret,
                     'avatar_force_update': 'true'}

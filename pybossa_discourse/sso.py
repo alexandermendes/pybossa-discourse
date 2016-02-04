@@ -54,7 +54,7 @@ class DiscourseSSO(object):
     def _get_credentials(self, nonce):
         """Return credentials for the current user."""
         credentials = {'nonce': nonce,
-                       'email': current_user.email,
+                       'email': current_user.email_addr,
                        'name': current_user.fullname,
                        'username': current_user.name,
                        'external_id': current_user.id,
