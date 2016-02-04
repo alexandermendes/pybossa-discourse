@@ -196,20 +196,6 @@ class DiscourseClient(object):
         return self._get(endpoint)
 
 
-    def discourse_user_id(self):
-        """Return the current user's Discourse ID."""
-        details = self.discourse_user_details()
-        user_id = details['user']['id']
-        return user_id
-
-
-    def discourse_user_title(self):
-        """Return the current user's title."""
-        details = self.discourse_user_details()
-        user_id = details['user']['title']
-        return user_id
-
-
     def discourse_user_activity(self):
         """Return the current user's recent activity.
 
