@@ -22,147 +22,147 @@ class TestClient(Test):
 
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_categories(self):
+    def test_categories(self):
         endpoint = '/categories.json'
-        self.client.discourse_categories()
+        self.client.categories()
 
         assert mock_request.called_with('GET', endpoint, dict())
 
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_category(self):
+    def test_category(self):
         endpoint = '/c/1.json'
-        self.client.discourse_category(1)
+        self.client.category(1)
 
         assert mock_request.called_with('GET', endpoint, dict())
 
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_category_topics_latest(self):
+    def test_category_topics_latest(self):
         endpoint = '/c/1/l/latest.json'
-        self.client.discourse_category_topics_latest(1)
+        self.client.category_topics_latest(1)
 
         assert mock_request.called_with('GET', endpoint, dict())
 
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_category_topics_new(self):
+    def test_category_topics_new(self):
         endpoint = '/c/1/l/new.json'
-        self.client.discourse_category_topics_new(1)
+        self.client.category_topics_new(1)
 
         assert mock_request.called_with('GET', endpoint, dict())
 
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_category_topics_top(self):
+    def test_category_topics_top(self):
         endpoint = '/c/1/l/top.json'
-        self.client.discourse_category_topics_top(1)
+        self.client.category_topics_top(1)
 
         assert mock_request.called_with('GET', endpoint, dict())
 
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_category_topics_subtopics(self):
+    def test_category_topics_subtopics(self):
         endpoint = '/c/2/1.json'
-        self.client.discourse_category_topics_subtopics(1, 2)
+        self.client.category_topics_subtopics(1, 2)
 
         assert mock_request.called_with('GET', endpoint, dict())
 
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_topic(self):
+    def test_topic(self):
         endpoint = '/t/1.json'
-        self.client.discourse_topic(1)
+        self.client.topic(1)
 
         assert mock_request.called_with('GET', endpoint, dict())
 
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_topics_latest(self):
+    def test_topics_latest(self):
         endpoint = '/latest.json'
-        self.client.discourse_topics_latest()
+        self.client.topics_latest()
 
         assert mock_request.called_with('GET', endpoint, dict())
 
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_topics_top(self):
+    def test_topics_top(self):
         endpoint = '/top.json'
-        self.client.discourse_topics_top()
+        self.client.topics_top()
 
         assert mock_request.called_with('GET', endpoint, dict())
 
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_user_details(self):
+    def test_user_details(self):
         endpoint = '/users/joebloggs.json'
-        self.client.discourse_user_details()
+        self.client.user_details()
 
         assert mock_request.called_with('GET', endpoint, dict())
 
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_user_activity(self):
+    def test_user_activity(self):
         endpoint = '/user_actions.json'
         params = {'username': 'joebloggs'}
-        self.client.discourse_user_activity()
+        self.client.user_activity()
 
         assert mock_request.called_with('GET', endpoint, params)
 
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_user_messages(self):
+    def test_user_messages(self):
         endpoint = '/topics/private-messages/joebloggs.json'
-        self.client.discourse_user_messages()
+        self.client.user_messages()
 
         assert mock_request.called_with('GET', endpoint, dict())
 
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_user_notifications(self):
+    def test_user_notifications(self):
         endpoint = '/notifications.json'
         params = {'username': 'joebloggs'}
-        self.client.discourse_user_notifications()
+        self.client.user_notifications()
 
         assert mock_request.called_with('GET', endpoint, params)
 
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_user_unread_notifications_count(self):
-        res = self.client.discourse_user_unread_notifications_count()
+    def test_user_unread_notifications_count(self):
+        res = self.client.user_unread_notifications_count()
 
         assert res == 0
 
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_user_signout(self):
+    def test_user_signout(self):
         endpoint = '/admin/users/1/log_out'
-        self.client.discourse_user_signout()
+        self.client.user_signout()
 
         assert mock_request.called_with('GET', endpoint, dict())
 
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_badges(self):
+    def test_badges(self):
         endpoint = '/admin/badges.json'
-        self.client.discourse_badges()
+        self.client.badges()
 
         assert mock_request.called_with('GET', endpoint, dict())
 
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_discourse_search(self):
+    def test_search(self):
         endpoint = '/search.json'
         params = {'q': 'something', 'order': 'posts', 'ascending': 'true'}
-        self.client.discourse_search('something')
+        self.client.search('something')
 
         assert mock_request.called_with('GET', endpoint, params)
 

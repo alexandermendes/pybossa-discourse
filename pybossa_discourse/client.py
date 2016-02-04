@@ -112,13 +112,13 @@ class DiscourseClient(object):
         return self._put(endpoint, params)
 
 
-    def discourse_categories(self):
+    def categories(self):
         """Return all categories."""
         endpoint = '/categories.json'
         return self._get(endpoint)
 
 
-    def discourse_category(self, category_id):
+    def category(self, category_id):
         """Return all topics in a category.
 
         :param category_id: The ID of the category.
@@ -127,7 +127,7 @@ class DiscourseClient(object):
         return self._get(endpoint)
 
 
-    def discourse_category_topics_latest(self, category_id):
+    def category_topics_latest(self, category_id):
         """Return the latest topics in a category.
 
         :param category_id: The ID of the category.
@@ -136,7 +136,7 @@ class DiscourseClient(object):
         return self._get(endpoint)
 
 
-    def discourse_category_topics_new(self, category_id):
+    def category_topics_new(self, category_id):
         """Return the newest topics in a category.
 
         :param category_id: The ID of the category.
@@ -145,7 +145,7 @@ class DiscourseClient(object):
         return self._get(endpoint)
 
 
-    def discourse_category_topics_top(self, category_id):
+    def category_topics_top(self, category_id):
         """Return the top topics in a category.
 
         :param category_id: The ID of the category.
@@ -154,7 +154,7 @@ class DiscourseClient(object):
         return self._get(endpoint)
 
 
-    def discourse_category_topics_subtopics(self, category_id, p_category_id):
+    def category_topics_subtopics(self, category_id, p_category_id):
         """Return the topics in a sub-category.
 
         :param p_category_id: The ID of the parent category.
@@ -164,7 +164,7 @@ class DiscourseClient(object):
         return self._get(endpoint)
 
 
-    def discourse_topic(self, topic_id):
+    def topic(self, topic_id):
         """Return a specific topic.
 
         :param topic_id: The ID of the topic.
@@ -173,26 +173,26 @@ class DiscourseClient(object):
         return self._get(endpoint)
 
 
-    def discourse_topics_latest(self):
+    def topics_latest(self):
         """Return the latest topics."""
         endpoint = '/latest.json'
         return self._get(endpoint)
 
 
-    def discourse_topics_top(self):
+    def topics_top(self):
         """Return the top topics."""
         endpoint = '/top.json'
         return self._get(endpoint)
 
 
-    def discourse_user_details(self):
+    def user_details(self):
         """Return the current user's details."""
         username = self._get_username()
         endpoint = '/users/{0}.json'.format(username)
         return self._get(endpoint)
 
 
-    def discourse_user_activity(self):
+    def user_activity(self):
         """Return the current user's recent activity.
 
         :param username: The user's Discourse username.
@@ -203,14 +203,14 @@ class DiscourseClient(object):
         return self._get(endpoint, params)
 
 
-    def discourse_user_messages(self):
+    def user_messages(self):
         """Return the current user's private messages."""
         username = self._get_username()
         endpoint = '/topics/private-messages/{0}.json'.format(username)
         return self._get(endpoint)
 
 
-    def discourse_user_notifications(self):
+    def user_notifications(self):
         """Return the current user's notifications."""
         username = self._get_username()
         endpoint = '/notifications.json'
@@ -218,30 +218,30 @@ class DiscourseClient(object):
         return self._get(endpoint, params)
 
 
-    def discourse_user_unread_notifications_count(self):
+    def user_unread_notifications_count(self):
         """Return a count of unread notifications for the current user."""
         username = self._get_username()
-        notifications = self.discourse_user_notifications()
+        notifications = self.user_notifications()
         count = sum([1 for n in notifications['notifications']
                      if not n['read']])
         return count
 
 
-    def discourse_user_signout(self):
+    def user_signout(self):
         """Sign out the current user from Discourse."""
-        details = self.discourse_user_details()
+        details = self.user_details()
         user_id = details['user']['id']
         endpoint = '/admin/users/{0}/log_out'.format(user_id)
         return self._post(endpoint)
 
 
-    def discourse_badges(self):
+    def badges(self):
         """Return all badges."""
         endpoint = '/admin/badges.json'
         return self._get(endpoint)
 
 
-    def discourse_search(self, query):
+    def search(self, query):
         """Perform a search.
 
         :param query: The search query.
