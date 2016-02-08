@@ -77,8 +77,8 @@ class PyBossaDiscourse(Plugin):
         client = app.extensions['discourse']['client']
         pybossa_ip = app.config['DISCOURSE_PYBOSSA_IP']
         secret = app.config['DISCOURSE_SECRET']
-        oauth_url = '{0}/discourse/oauth-authorized'.format(pybossa_ip)
-        signout_url = '{0}/discourse/signout'.format(pybossa_ip)
+        oauth_url = 'http://{0}/discourse/oauth-authorized'.format(pybossa_ip)
+        signout_url = 'http://{0}/discourse/signout'.format(pybossa_ip)
 
         client._whitelist_ip(pybossa_ip)
         client._update_setting('enable_sso', 'true')
