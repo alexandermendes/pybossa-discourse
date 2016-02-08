@@ -38,7 +38,7 @@ def signout():
     discourse_client = app.extensions['discourse']['client']
     if not current_user.is_anonymous():
         try:
-            discourse_client.user_signout(current_user)
+            discourse_client.user_signout()
         except (ValueError, AttributeError) as e:  # pragma: no cover
             flash('Discourse Logout Failed: {0}'.format(str(e)), 'error')
     return redirect(url_for('account.signout'))
