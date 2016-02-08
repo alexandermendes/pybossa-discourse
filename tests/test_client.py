@@ -19,6 +19,7 @@ class TestClient(Test):
     def setUp(self):
         super(TestClient, self).setUp()
         self.client = self.flask_app.extensions['discourse']['client']
+        self.domain = self.flask_app.config['DISCOURSE_DOMAIN']
 
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
@@ -146,10 +147,10 @@ class TestClient(Test):
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_user_unread_notifications_count(self):
+    def test_anon_user_unread_notifications_count(self):
         res = self.client.user_unread_notifications_count()
 
-        assert res == 0
+        assert res is None
 
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
