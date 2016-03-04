@@ -94,27 +94,6 @@ class DiscourseClient(object):
         return res[0]['username']
 
 
-    def _whitelist_ip(self, ip_address):
-        """Ensure an IP is on the Discourse whitelist.
-
-        :param ip_address: IP address to be added to the Discourse whitelist.
-        """
-        endpoint = "/admin/logs/screened_ip_addresses.json"
-        params = {'ip_address': ip_address, 'action_name': 'do_nothing'}
-        return self._post(endpoint, params)
-
-
-    def _update_setting(self, setting, new_value):
-        """Update a site setting.
-
-        :param setting: The Discourse setting to be updated.
-        :param new_value: The value to be set.
-        """
-        endpoint = "/admin/site_settings/{0}".format(setting)
-        params = {setting: new_value}
-        return self._put(endpoint, params)
-
-
     def categories(self):
         """Return all categories."""
         endpoint = '/categories.json'
