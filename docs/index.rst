@@ -18,20 +18,13 @@ The following configuration settings should all be added to your main PyBossa
 configuration file:
 
 =================================== ==============================================================
-`DISCOURSE_SECRET`                  | Secret string of at least 10 characters used to
-                                    encrypt/decrypt
-                                    | SSO information.
+`DISCOURSE_SECRET`                  | Secret string of your choice (at least 10 characters).
 
-`DISCOURSE_API_USERNAME`            Username of an administrator of your Discourse
-                                    application.
+`DISCOURSE_API_USERNAME`            Username of an administrator of your Discourse application.
 
-`DISCOURSE_API_KEY`                 The Discourse API key generated for the same Discourse
-                                    administrator
-                                    | as above (visit the user's profile and click
-                                    the **Admin** button).
+`DISCOURSE_API_KEY`                 The API key generated for the same Discourse administrator.
 
 `DISCOURSE_URL`                     The base URL of your Discourse application
-                                    | (e.g. ``http://discuss.example.com``).
 =================================== ==============================================================
 
 In order to enable SSO you should also ensure that the following your Discourse
@@ -46,7 +39,7 @@ application is configured, via the **Admin** section, as follows:
 
 `sso_overides_email`                Enabled
 
-`sso_overides_username`             Enabled 
+`sso_overides_username`             Enabled
 
 `sso_overrides_name`                Enabled
 
@@ -89,7 +82,7 @@ will be automatically signed in to Discourse.
 Discourse accounts will be created automatically the first time any of the
 following this happen:
 
-- The user visits http://{pybossa-site-url}/discourse/index.
+- The user visits ``http://{pybossa-site-url}/discourse/index``.
 - The user clicks the **Log In** button from within the Discourse application.
 - An API call is made regarding the user, such as one to retrieve their notifications.
 
