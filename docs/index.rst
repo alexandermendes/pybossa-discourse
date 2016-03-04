@@ -20,14 +20,14 @@ configuration file:
 =================================== ==========================================================
 `DISCOURSE_SECRET`                  Secret string of at least 10 characters used to
                                     encrypt/decrypt SSO information.
-=================================== ==========================================================
+
 `DISCOURSE_API_USERNAME`            Username of an administrator of your Discourse
                                     application.
-=================================== ==========================================================
+
 `DISCOURSE_API_KEY`                 The Discourse API key generated for the same Discourse
                                     administrator as above (visit the user's profile and click
                                     the **Admin** button).
-=================================== ==========================================================
+
 `DISCOURSE_URL`                     The base URL of your Discourse application
                                     (e.g. http://discuss.example.com).
 =================================== ==========================================================
@@ -37,41 +37,39 @@ application is configured, via the **Admin** section, as follows:
 
 =================================== ==========================================================
 `enable_sso`                        Enabled
-=================================== ==========================================================
+
 `sso_url`                           http://{your-server-ip-address}/discourse/oauth-authorized
-=================================== ==========================================================
+
 `sso_secret`                        The value chosen for `DISCOURSE_SECRET`.
-=================================== ==========================================================
+
 `sso_overides_email`                Enabled
-=================================== ==========================================================
+
 `sso_overides_username`             Enabled 
-=================================== ==========================================================
+
 `sso_overrides_name`                Enabled
-=================================== ==========================================================
+
 `sso_overrides_avatar`              Enabled
-=================================== ==========================================================
+
 `allow_uploaded_avatars`            Disabled    
-=================================== ==========================================================
+
 `logout_redirect`                   http://{your-server-ip-address}/discourse/signout
 =================================== ==========================================================
+
+In order for the API client to work you should also make sure that the IP address of your server
+is added to the Discourse whitelist, via **Admin > Logs > Screened IPs**.
 
 
 Theme Integration
 =================
 
-To achieve better integration with your main PyBossa theme you can update it
-as follows:
-
-Links to Discourse:
+To achieve better integration with your main PyBossa theme you can any navigation
+links as follows:
 
 .. code-block:: HTML+Django
 
     {% if 'pybossa_discourse' in plugins %}
         <a href="{{ url_for('discourse.index') }}">Community</a>
     {% endif %}
-
-
-Sign out:
 
 .. code-block:: HTML+Django
     
