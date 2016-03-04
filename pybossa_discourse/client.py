@@ -14,7 +14,7 @@ class DiscourseClient(object):
     """
 
     def __init__(self, app=None):
-        self.domain = app.config['DISCOURSE_DOMAIN']
+        self.url = app.config['DISCOURSE_URL']
         self.api_key = app.config['DISCOURSE_API_KEY']
         self.api_username = app.config['DISCOURSE_API_USERNAME']
         self.error_status = ErrorStatus()
@@ -22,7 +22,7 @@ class DiscourseClient(object):
 
     def _request(self, verb, endpoint, params):
         """Make a request."""
-        url = '{0}{1}'.format(self.domain, endpoint)
+        url = '{0}{1}'.format(self.url, endpoint)
         params['api_key'] = self.api_key
         params['api_username'] = self.api_username
 

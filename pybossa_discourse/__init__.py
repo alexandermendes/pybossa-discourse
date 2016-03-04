@@ -18,7 +18,7 @@ __version__ = "0.1.0"
 DISCOURSE_SETTINGS = ('DISCOURSE_API_KEY',
                       'DISCOURSE_API_USERNAME',
                       'DISCOURSE_SECRET',
-                      'DISCOURSE_DOMAIN')
+                      'DISCOURSE_URL')
 
 
 class PyBossaDiscourse(Plugin):
