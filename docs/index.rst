@@ -18,7 +18,7 @@ The following configuration settings should all be added to your main PyBossa
 configuration file:
 
 =================================== ==============================================================
-`DISCOURSE_SECRET`                  | Secret string of your choice (at least 10 characters).
+`DISCOURSE_SECRET`                  Secret string of your choice (at least 10 characters).
 
 `DISCOURSE_API_USERNAME`            Username of an administrator of your Discourse application.
 
@@ -87,8 +87,8 @@ following this happen:
 - An API call is made regarding the user, such as one to retrieve their notifications.
 
 
-Discourse Global Environment Variable
-=====================================
+Global Environment Variable
+===========================
 
 The plugin provides a global environment variable for easier interaction with
 the Discourse API. This variable will be made available to all templates of your
