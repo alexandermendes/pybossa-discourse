@@ -11,6 +11,7 @@
 # serve to show the default.
 
 import sys
+import re
 import os
 import sphinx_rtd_theme
 
