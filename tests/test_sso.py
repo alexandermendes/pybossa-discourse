@@ -23,7 +23,7 @@ class TestSSO(Test):
         super(TestSSO, self).setUp()
         self.sso = self.flask_app.extensions['discourse']['sso']
         self.secret = self.flask_app.config['DISCOURSE_SECRET']
-        self.domain = self.flask_app.config['DISCOURSE_DOMAIN']
+        self.url = self.flask_app.config['DISCOURSE_URL']
         self.nonce = "cb68251eefb5211e58c00ff1395f0c0b"
         self.payload = 'bm9uY2U9Y2I2ODI1MWVlZmI1MjExZTU4YzAwZmYxMzk1ZjBjMGI' \
                        '%3D%0A'
@@ -87,7 +87,7 @@ class TestSSO(Test):
         mock_user.is_anonymous.return_value = True
         res = self.sso.signin()
 
-        assert res == self.domain
+        assert res == self.url
 
 
     @patch('pybossa_discourse.sso.redirect', return_value=True)
@@ -96,7 +96,7 @@ class TestSSO(Test):
                                                                 mock_user,
                                                                 mock_redirect):
         mock_user.is_anonymous.return_value = False
-        url = '{0}/session/sso?return_path=%2F'.format(self.domain)
+        url = '{0}/session/sso?return_path=%2F'.format(self.url)
         res = self.sso.signin()
 
         assert res == url
