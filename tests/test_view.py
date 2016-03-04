@@ -14,7 +14,6 @@ class TestView(web.Helper):
 
     def setUp(self):
         super(TestView, self).setUp()
-        self.domain = self.flask_app.config['DISCOURSE_DOMAIN']
 
 
     @with_context
