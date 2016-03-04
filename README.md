@@ -10,11 +10,10 @@
 A PyBossa plugin for Discourse integration.
 
 
-## Installation
+## Documentation
 
-Copy the [pybossa_discourse](pybossa_discourse) folder into your PyBossa
-[plugins](https://github.com/PyBossa/pybossa/tree/master/pybossa/plugins) directory. The
-plugin will be available after you next restart the server.
+For full details of installation, configuration and usage see
+the [pybossa-discourse documentation](http://pybossa-discourse.readthedocs.org/en/latest/).
 
 
 ## Testing
