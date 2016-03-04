@@ -18,7 +18,7 @@ class DiscourseSSO(object):
     def __init__(self, app):
         discourse = app.extensions['discourse']
         self.secret = app.config['DISCOURSE_SECRET']
-        self.domain = app.config['DISCOURSE_DOMAIN']
+        self.url = app.config['DISCOURSE_URL']
 
 
     def _validate_payload(self, payload, sig):
@@ -83,7 +83,7 @@ class DiscourseSSO(object):
         """
         nonce = self._validate_payload(payload, sig)
         payload = self._build_return_payload(nonce)
-        url = '{0}/session/sso_login?{1}'.format(self.domain, payload)
+        url = '{0}/session/sso_login?{1}'.format(self.url, payload)
 
         return url
 
@@ -95,6 +95,6 @@ class DiscourseSSO(object):
         if the current user is anonymous.
         """
         if current_user.is_anonymous():
-            return self.domain
+            return self.url
 
-        return '{0}/session/sso?return_path=%2F'.format(self.domain)
+        return '{0}/session/sso?return_path=%2F'.format(self.url)
