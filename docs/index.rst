@@ -17,28 +17,30 @@ Configuration
 The following configuration settings should all be added to your main PyBossa
 configuration file:
 
-=================================== ==========================================================
-`DISCOURSE_SECRET`                  Secret string of at least 10 characters used to
-                                    encrypt/decrypt SSO information.
+=================================== ==============================================================
+`DISCOURSE_SECRET`                  | Secret string of at least 10 characters used to
+                                    encrypt/decrypt
+                                    | SSO information.
 
 `DISCOURSE_API_USERNAME`            Username of an administrator of your Discourse
                                     application.
 
 `DISCOURSE_API_KEY`                 The Discourse API key generated for the same Discourse
-                                    administrator as above (visit the user's profile and click
+                                    administrator
+                                    | as above (visit the user's profile and click
                                     the **Admin** button).
 
 `DISCOURSE_URL`                     The base URL of your Discourse application
-                                    (e.g. http://discuss.example.com).
-=================================== ==========================================================
+                                    | (e.g. ``http://discuss.example.com``).
+=================================== ==============================================================
 
 In order to enable SSO you should also ensure that the following your Discourse
 application is configured, via the **Admin** section, as follows:
 
-=================================== ==========================================================
+=================================== ==============================================================
 `enable_sso`                        Enabled
 
-`sso_url`                           http://{your-server-ip-address}/discourse/oauth-authorized
+`sso_url`                           ``http://{your-server-ip-address}/discourse/oauth-authorized``
 
 `sso_secret`                        The value chosen for `DISCOURSE_SECRET`.
 
@@ -52,8 +54,8 @@ application is configured, via the **Admin** section, as follows:
 
 `allow_uploaded_avatars`            Disabled    
 
-`logout_redirect`                   http://{your-server-ip-address}/discourse/signout
-=================================== ==========================================================
+`logout_redirect`                   ``http://{your-server-ip-address}/discourse/signout``
+=================================== ==============================================================
 
 In order for the API client to work you should also make sure that the IP address of your server
 is added to the Discourse whitelist, via **Admin > Logs > Screened IPs**.
