@@ -45,7 +45,7 @@ application is configured, via the **Admin** section, as follows:
 
 `sso_overrides_avatar`              Enabled
 
-`allow_uploaded_avatars`            Disabled    
+`allow_uploaded_avatars`            Disabled
 
 `logout_redirect`                   ``http://{your-server-ip-address}/discourse/signout``
 =================================== ==============================================================
@@ -67,7 +67,7 @@ links as follows:
     {% endif %}
 
 .. code-block:: HTML+Django
-    
+
     {% if 'pybossa_discourse' in plugins %}
         <a href="{{ url_for('discourse.signout') }}">Sign out</a>
     {% endif %}
@@ -91,15 +91,26 @@ Global Environment Variable
 ===========================
 
 The plugin provides a global environment variable for easier interaction with
-the Discourse API. This variable will be made available to all templates of your
-PyBossa application. It returns the result of an API call in JSON format, for
-example, the following will return all categories, if the plugin is enabled:
+the Discourse API. This could be useful for doing things like this::
 
 .. code-block:: HTML+Django
 
-    {% if 'pybossa_discourse' in plugins %}
-        {{ discourse.categories }}
-    {% endif %}
+    <!-- Navigation link with current user's unread notification count -->
+    <li class="nav-link">
+        {% if 'pybossa_discourse' in plugins %}
+        <a href="{{ url_for('discourse.index')}}">
+            Community <span id="notifications" class="badge badge-info"></span>
+        </a>
+        <script>
+            var notifications = {{ discourse.user_unread_notifications_count() }};
+            if (notifications > 0) {
+                $('#notifications').html(notifications)
+            }
+        </script>
+        {% else %}
+        <a href="{{ url_for('account.index')}}">Community</a>
+        {% endif %}
+    </li>
 
 See the API documentation below for full details of the methods available.
 
@@ -111,4 +122,3 @@ API
 
 .. autoclass:: DiscourseClient
    :members:
-
