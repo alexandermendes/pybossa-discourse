@@ -91,7 +91,7 @@ Global Environment Variable
 ===========================
 
 The plugin provides a global environment variable for easier interaction with
-the Discourse API. This could be useful for doing things like this::
+the Discourse API. This could be useful for doing things like this:
 
 .. code-block:: HTML+Django
 
@@ -104,7 +104,7 @@ the Discourse API. This could be useful for doing things like this::
         <script>
             var notifications = {{ discourse.user_unread_notifications_count() }};
             if (notifications > 0) {
-                $('#notifications').html(notifications);
+                $('#notifications').html(notifications)
             }
         </script>
         {% else %}
