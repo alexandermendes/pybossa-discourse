@@ -8,7 +8,7 @@ from pybossa.error import ErrorStatus
 
 
 class DiscourseClient(object):
-    """Discourse class to initialise the Flask-Discourse extension.
+    """Discourse client to interact with the Discourse API.
 
     :param app: The PyBossa application.
     """
