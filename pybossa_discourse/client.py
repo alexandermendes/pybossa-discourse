@@ -91,7 +91,7 @@ class DiscourseClient(object):
             self._create_user()
             res = get_username_response()
 
-        return res[0]['username']
+        return res[0]['username'] if len(res) == 0 else None
 
 
     def categories(self):
