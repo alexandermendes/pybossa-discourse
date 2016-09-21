@@ -13,7 +13,8 @@ from .client import DiscourseClient
 from .sso import DiscourseSSO
 
 __plugin__ = "PyBossaDiscourse"
-__version__ = "0.1.0"
+__version__ = json.load(open(os.path.join(os.path.dirname(__file__),
+                                          'info.json')))['version']
 
 DISCOURSE_SETTINGS = ('DISCOURSE_API_KEY',
                       'DISCOURSE_API_USERNAME',
