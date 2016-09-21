@@ -7,6 +7,7 @@ A PyBossa plugin for Discourse integration.
 """
 
 import os
+import json
 from flask import current_app as app
 from flask.ext.plugins import Plugin
 from .client import DiscourseClient
