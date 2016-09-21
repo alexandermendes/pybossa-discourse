@@ -82,7 +82,7 @@ class DiscourseClient(object):
             return self._get(endpoint, params)
 
         res = get_username_response()
-        if len(res.content) == 0:
+        if len(res) == 0:
             self._create_user()
             res = get_username_response()
 
