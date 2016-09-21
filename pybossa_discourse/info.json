@@ -5,5 +5,5 @@
     "website": "https://github.com/alexandermendes/pybossa-discourse",
     "license": "BSD",
     "description": "A PyBossa plugin for Discourse integration.",
-    "version": "0.1.2"
+    "version": "0.1.3"
 }

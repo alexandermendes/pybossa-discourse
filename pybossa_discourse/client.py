@@ -30,18 +30,13 @@ class DiscourseClient(object):
             res = requests.request(verb, url, params=params)
         except requests.RequestException as e:  # pragma: no cover
             return self.error_status.format_exception(e, target=endpoint,
-                                                      action=verb)
-
-        if len(res.content.strip()) == 0:  # pragma: no cover
-            return None
+                                                      action=verb).json()
 
         try:
-            decoded = res.json()
+            return res.json()
         except ValueError as e:  # pragma: no cover
             return self.error_status.format_exception(e, target=endpoint,
-                                                      action=verb)
-
-        return decoded
+                                                      action=verb).json()
 
 
     def _get(self, endpoint, params=dict()):
@@ -87,7 +82,7 @@ class DiscourseClient(object):
             return self._get(endpoint, params)
 
         res = get_username_response()
-        if len(res) == 0:
+        if len(res.content) == 0:
             self._create_user()
             res = get_username_response()
 
