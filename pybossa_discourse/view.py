@@ -4,11 +4,11 @@
 from flask import Blueprint, request, url_for, flash, redirect
 from flask import current_app as app
 from flask.ext.login import current_user
+from . import discourse_sso, discourse_client
 
 
 def index():
     """Attempt to sign in via SSO then redirect to Discourse."""
-    discourse_sso = app.extensions['discourse']['sso']
     try:
         return redirect(discourse_sso.signin())
     except AttributeError as e:  # pragma: no cover
@@ -18,7 +18,6 @@ def index():
 
 def oauth_authorized():
     """Authorise a Discourse login."""
-    discourse_sso = app.extensions['discourse']['sso']
     sso = request.args.get('sso')
     sig = request.args.get('sig')
 
@@ -35,7 +34,6 @@ def oauth_authorized():
 
 def signout():
     """Signout the current user from both PyBossa and Discourse."""
-    discourse_client = app.extensions['discourse']['client']
     if not current_user.is_anonymous():
         try:
             discourse_client.user_signout()
