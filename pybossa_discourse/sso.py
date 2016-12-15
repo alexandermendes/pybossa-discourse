@@ -10,13 +10,16 @@ import hashlib
 
 
 class DiscourseSSO(object):
-    """Discourse SSO class for handling Discourse single sign-on.
+    """A class for handling Discourse SSO.
 
     :param app: The PyBossa application.
     """
 
-    def __init__(self, app):
-        discourse = app.extensions['discourse']
+    def __init__(self, app=None):
+        if app is not None: # pragma: no cover
+            self.init_app(app)
+
+    def init_app(self, app):
         self.secret = app.config['DISCOURSE_SECRET']
         self.url = app.config['DISCOURSE_URL']
 
