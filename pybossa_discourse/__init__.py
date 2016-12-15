@@ -30,7 +30,7 @@ class PyBossaDiscourse(Plugin):
         for setting in DISCOURSE_SETTINGS:
             try:
                 app.config[setting]
-            except KeyError as inst: # pragma: no cover
+            except KeyError as inst:  # pragma: no cover
                 msg = "PyBossa Discourse disabled"
                 print type(inst)
                 print inst.args

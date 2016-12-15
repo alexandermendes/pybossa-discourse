@@ -15,93 +15,73 @@ mock_user.email_addr.return_value = 'joebloggs'
 
 class TestClient(Test):
 
-
     def setUp(self):
         super(TestClient, self).setUp()
         self.client = self.flask_app.extensions['discourse']['client']
         self.url = self.flask_app.config['DISCOURSE_URL']
-
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
     def test_categories(self):
         endpoint = '/categories.json'
         url = '{0}{1}'.format(self.url, endpoint)
         self.client.categories()
-
         assert mock_request.called_with('GET', url, dict())
-
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
     def test_category(self):
         endpoint = '/c/1.json'
         url = '{0}{1}'.format(self.url, endpoint)
         self.client.category(1)
-
         assert mock_request.called_with('GET', url, dict())
-
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
     def test_category_topics_latest(self):
         endpoint = '/c/1/l/latest.json'
         url = '{0}{1}'.format(self.url, endpoint)
         self.client.category_topics_latest(1)
-
         assert mock_request.called_with('GET', url, dict())
-
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
     def test_category_topics_new(self):
         endpoint = '/c/1/l/new.json'
         url = '{0}{1}'.format(self.url, endpoint)
         self.client.category_topics_new(1)
-
         assert mock_request.called_with('GET', url, dict())
-
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
     def test_category_topics_top(self):
         endpoint = '/c/1/l/top.json'
         url = '{0}{1}'.format(self.url, endpoint)
         self.client.category_topics_top(1)
-
         assert mock_request.called_with('GET', url, dict())
-
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
     def test_category_topics_subtopics(self):
         endpoint = '/c/2/1.json'
         url = '{0}{1}'.format(self.url, endpoint)
         self.client.category_topics_subtopics(1, 2)
-
         assert mock_request.called_with('GET', url, dict())
-
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
     def test_topic(self):
         endpoint = '/t/1.json'
         url = '{0}{1}'.format(self.url, endpoint)
         self.client.topic(1)
-
         assert mock_request.called_with('GET', url, dict())
-
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
     def test_topics_latest(self):
         endpoint = '/latest.json'
         url = '{0}{1}'.format(self.url, endpoint)
         self.client.topics_latest()
-
         assert mock_request.called_with('GET', url, dict())
-
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
     def test_topics_top(self):
         endpoint = '/top.json'
         url = '{0}{1}'.format(self.url, endpoint)
         self.client.topics_top()
-
         assert mock_request.called_with('GET', url, dict())
-
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
@@ -109,9 +89,7 @@ class TestClient(Test):
         endpoint = '/users/joebloggs.json'
         url = '{0}{1}'.format(self.url, endpoint)
         self.client.user_details()
-
         assert mock_request.called_with('GET', url, dict())
-
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
@@ -120,9 +98,7 @@ class TestClient(Test):
         url = '{0}{1}'.format(self.url, endpoint)
         params = {'username': 'joebloggs'}
         self.client.user_activity()
-
         assert mock_request.called_with('GET', url, params)
-
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
@@ -130,9 +106,7 @@ class TestClient(Test):
         endpoint = '/topics/private-messages/joebloggs.json'
         url = '{0}{1}'.format(self.url, endpoint)
         self.client.user_messages()
-
         assert mock_request.called_with('GET', url, dict())
-
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
@@ -141,17 +115,13 @@ class TestClient(Test):
         url = '{0}{1}'.format(self.url, endpoint)
         params = {'username': 'joebloggs'}
         self.client.user_notifications()
-
         assert mock_request.called_with('GET', url, params)
-
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
     def test_anon_user_unread_notifications_count(self):
         res = self.client.user_unread_notifications_count()
-
         assert res is None
-
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
@@ -159,9 +129,7 @@ class TestClient(Test):
         endpoint = '/admin/users/1/log_out'
         url = '{0}{1}'.format(self.url, endpoint)
         self.client.user_signout()
-
         assert mock_request.called_with('GET', url, dict())
-
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
@@ -169,9 +137,7 @@ class TestClient(Test):
         endpoint = '/admin/badges.json'
         url = '{0}{1}'.format(self.url, endpoint)
         self.client.badges()
-
         assert mock_request.called_with('GET', url, dict())
-
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
@@ -180,9 +146,7 @@ class TestClient(Test):
         url = '{0}{1}'.format(self.url, endpoint)
         params = {'q': 'something', 'order': 'posts', 'ascending': 'true'}
         self.client.search('something')
-
         assert mock_request.called_with('GET', url, params)
-
 
     @patch('pybossa_discourse.client.DiscourseClient._create_user')
     @patch('pybossa_discourse.client.current_user', new=mock_user)
@@ -193,5 +157,4 @@ class TestClient(Test):
         url = '{0}{1}'.format(self.url, endpoint)
         params = {'filter': 'me@me.com'}
         self.client._get_username()
-
         assert mock_request.called_with('GET', url, params)
