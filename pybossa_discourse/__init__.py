@@ -26,7 +26,6 @@ DISCOURSE_SETTINGS = ('DISCOURSE_API_KEY',
 class PyBossaDiscourse(Plugin):
     """PyBossa Discourse plugin class."""
 
-
     def setup(self):
         """Setup the plugin."""
 
@@ -34,8 +33,16 @@ class PyBossaDiscourse(Plugin):
         for setting in DISCOURSE_SETTINGS:
             try:
                 app.config[setting]
-            except KeyError:
-                raise ValueError('{} setting not found.'.format(setting))
+            except KeyError as inst:
+                msg = "PyBossa Discourse disabled"
+                print type(inst)
+                print inst.args
+                print inst
+                print msg
+                log_message = '{0}: {1}'.format(msg, str(inst))
+                app.logger.info(log_message)
+                self.disable()
+                return
 
         # Application specific state
         app.extensions['discourse'] = {'client': None, 'sso': None}
