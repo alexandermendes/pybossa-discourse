@@ -74,18 +74,16 @@ class DiscourseClient(object):
         if current_user.is_anonymous():
             return None
 
-        def get_username_response():
-            endpoint = '/admin/users/list/all.json'
-            params = {'filter': current_user.email_addr}
-            return self._get(endpoint, params)
+		endpoint = '/admin/users/list/all.json'
+        params = {'filter': current_user.email_addr}
+        res = self._get(endpoint, params)
 
-        res = get_username_response()
-
+        # Attempt to create a new user
         if len(res) == 0:
             self._create_user()
-            res = get_username_response()
+            res = self._get(endpoint, params)
 
-        return res[0]['username'] if len(res) == 0 else None
+        return res[0]['username'] if len(res) != 0 else None
 
 
     def categories(self):
