@@ -2,7 +2,7 @@
 """SSO module for pybossa-discourse."""
 
 from flask.ext.login import current_user
-from flask import request, url_for, redirect
+from flask import request, url_for
 import urllib
 import base64
 import hmac
@@ -36,7 +36,6 @@ class DiscourseSSO(object):
             raise ValueError('Payload does not match signature')
 
         nonce = decoded.split('=')[1].split('&')[0]
-
         return nonce
 
 
@@ -47,7 +46,6 @@ class DiscourseSSO(object):
         h = hmac.new(self.secret, return_payload, digestmod=hashlib.sha256)
         query_string = urllib.urlencode({'sso': return_payload,
                                          'sig': h.hexdigest()})
-
         return query_string
 
 
@@ -71,7 +69,6 @@ class DiscourseSSO(object):
                               'avatar_force_update': 'true'
                               }
             credentials.update(avatar_details)
-
         return credentials
 
 
@@ -84,17 +81,15 @@ class DiscourseSSO(object):
         nonce = self._validate_payload(payload, sig)
         payload = self._build_return_payload(nonce)
         url = '{0}/session/sso_login?{1}'.format(self.url, payload)
-
         return url
 
 
-    def signin(self):
-        """Signin to Discourse via SSO, if the current user is not anonymous.
+    def get_sso_url(self):
+        """Return Discourse SSO URL, if the current user is not anonymous.
 
-        :returns: Redirect to the Discourse SSO URL, or the Discourse base URL
-        if the current user is anonymous.
+        :returns: Discourse SSO URL, or Discourse base URL if the current user
+        is anonymous.
         """
         if current_user.is_anonymous():
             return self.url
-
         return '{0}/session/sso?return_path=%2F'.format(self.url)

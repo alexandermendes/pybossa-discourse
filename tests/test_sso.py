@@ -33,19 +33,16 @@ class TestSSO(Test):
 
     def test_validation_fails_when_no_nonce_in_payload(self):
         pl = base64.encodestring('something')
-
         assert_raises(ValueError, self.sso._validate_payload, pl, self.sig)
 
 
     def test_validation_fails_when_payload_does_not_match_sig(self):
         pl = base64.encodestring('nonce=1234')
-
         assert_raises(ValueError, self.sso._validate_payload, pl, self.sig)
 
 
     def test_nonce_returned_when_parameters_valid(self):
         nonce = self.sso._validate_payload(self.payload, self.sig)
-
         assert nonce == self.nonce
 
 
@@ -66,7 +63,6 @@ class TestSSO(Test):
                     'name': mock_user.fullname, 'username': mock_user.name,
                     'external_id': mock_user.id, 'sso_secret': self.secret,
                     'avatar_force_update': 'true'}
-
         assert set(expected).issubset(set(creds))
 
 
@@ -76,27 +72,20 @@ class TestSSO(Test):
     def test_url_built_with_valid_parameters(self, mock_request, mock_url,
                                              mock_user):
         url = self.sso.validate(self.payload, self.sig)
-
         assert 'sso' in url and 'sig' in url
 
 
-    @patch('pybossa_discourse.sso.redirect', return_value=True)
     @patch('pybossa_discourse.sso.current_user', return_value=mock_user)
-    def test_base_url_returned_to_anonymous_users_on_sign_in(self, mock_user,
-                                                             mock_redirect):
+    def test_base_url_returned_to_anonymous_users(self, mock_user):
         mock_user.is_anonymous.return_value = True
-        res = self.sso.signin()
+        expected = self.url
+        actual = self.sso.get_sso_url()
+        assert expected == actual
 
-        assert res == self.url
 
-
-    @patch('pybossa_discourse.sso.redirect', return_value=True)
     @patch('pybossa_discourse.sso.current_user', return_value=mock_user)
-    def test_sso_url_returned_to_authenticated_users_on_sign_in(self,
-                                                                mock_user,
-                                                                mock_redirect):
+    def test_sso_url_returned_to_authenticated_users(self, mock_user):
         mock_user.is_anonymous.return_value = False
-        url = '{0}/session/sso?return_path=%2F'.format(self.url)
-        res = self.sso.signin()
-
-        assert res == url
+        expected = '{0}/session/sso?return_path=%2F'.format(self.url)
+        actual = self.sso.get_sso_url()
+        assert expected == actual
