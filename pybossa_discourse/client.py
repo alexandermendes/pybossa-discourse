@@ -74,7 +74,7 @@ class DiscourseClient(object):
         if current_user.is_anonymous():
             return None
 
-		endpoint = '/admin/users/list/all.json'
+        endpoint = '/admin/users/list/all.json'
         params = {'filter': current_user.email_addr}
         res = self._get(endpoint, params)
 
