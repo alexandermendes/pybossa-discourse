@@ -3,6 +3,10 @@ pybossa-discourse
 
 A PyBossa plugin for Discourse integration.
 
+Features:
+- Permit users to access Discourse via SSO
+- Make Discourse API requests from your PyBossa theme templates
+
 
 Installation
 ============
@@ -14,8 +18,7 @@ the plugin as below and restart the server.
 Configuration
 =============
 
-The following configuration settings should all be added to your main PyBossa
-configuration file:
+The following settings should all be added to your main PyBossa configuration file:
 
 =================================== ==============================================================
 `DISCOURSE_SECRET`                  Secret string of your choice (at least 10 characters).
@@ -27,8 +30,8 @@ configuration file:
 `DISCOURSE_URL`                     The base URL of your Discourse application
 =================================== ==============================================================
 
-In order to enable SSO you should also ensure that the following your Discourse
-application is configured, via the **Admin** section, as follows:
+In order to enable SSO you should also ensure that your Discourse application is configured,
+via the **Admin** section, as follows:
 
 =================================== ==============================================================
 `enable_sso`                        Enabled
@@ -57,17 +60,19 @@ is added to the Discourse whitelist, via **Admin > Logs > Screened IPs**.
 Theme Integration
 =================
 
-To achieve better integration with your main PyBossa theme you can any navigation
+To achieve better integration with your main PyBossa theme you can add navigation
 links as follows:
 
 .. code-block:: HTML+Django
 
+    <!-- Go to your Discourse homepage -->
     {% if 'pybossa_discourse' in plugins %}
         <a href="{{ url_for('discourse.index') }}">Community</a>
     {% endif %}
 
 .. code-block:: HTML+Django
 
+    <!-- Sign a user out of Discourse when they sign out of PyBossa -->
     {% if 'pybossa_discourse' in plugins %}
         <a href="{{ url_for('discourse.signout') }}">Sign out</a>
     {% endif %}
@@ -80,7 +85,7 @@ Once Single sign-on is configured users that sign in via your PyBossa applicatio
 will be automatically signed in to Discourse.
 
 Discourse accounts will be created automatically the first time any of the
-following this happen:
+following things happen:
 
 - The user visits ``http://{pybossa-site-url}/discourse/index``.
 - The user clicks the **Log In** button from within the Discourse application.
@@ -98,15 +103,11 @@ the Discourse API. This could be useful for doing things like this:
     <!-- Navigation link with current user's unread notification count -->
     <li class="nav-link">
         {% if 'pybossa_discourse' in plugins %}
-        <a href="{{ url_for('discourse.index')}}">
-            Community <span id="notifications" class="badge badge-info"></span>
+        <a href="{{ url_for('discourse.index')}}">Community
+            <span id="notifications" class="badge badge-info">
+                {{ discourse.user_unread_notifications_count() }}
+            </span>
         </a>
-        <script>
-            var notifications = {{ discourse.user_unread_notifications_count() }};
-            if (notifications > 0) {
-                $('#notifications').html(notifications)
-            }
-        </script>
         {% else %}
         <a href="{{ url_for('account.index')}}">Community</a>
         {% endif %}
