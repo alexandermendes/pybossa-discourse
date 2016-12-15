@@ -16,13 +16,12 @@ class DiscourseSSO(object):
     """
 
     def __init__(self, app=None):
-        if app is not None: # pragma: no cover
+        if app is not None:  # pragma: no cover
             self.init_app(app)
 
     def init_app(self, app):
         self.secret = app.config['DISCOURSE_SECRET']
         self.url = app.config['DISCOURSE_URL']
-
 
     def _validate_payload(self, payload, sig):
         """Validate an SSO payload."""
@@ -41,7 +40,6 @@ class DiscourseSSO(object):
         nonce = decoded.split('=')[1].split('&')[0]
         return nonce
 
-
     def _build_return_payload(self, nonce):
         """Construct the return url."""
         credentials = self._get_credentials(nonce)
@@ -50,7 +48,6 @@ class DiscourseSSO(object):
         query_string = urllib.urlencode({'sso': return_payload,
                                          'sig': h.hexdigest()})
         return query_string
-
 
     def _get_credentials(self, nonce):
         """Return credentials for the current user."""
@@ -74,7 +71,6 @@ class DiscourseSSO(object):
             credentials.update(avatar_details)
         return credentials
 
-
     def validate(self, payload, sig):
         """Validate payload and return SSO url.
 
@@ -85,7 +81,6 @@ class DiscourseSSO(object):
         payload = self._build_return_payload(nonce)
         url = '{0}/session/sso_login?{1}'.format(self.url, payload)
         return url
-
 
     def get_sso_url(self):
         """Return Discourse SSO URL, if the current user is not anonymous.
