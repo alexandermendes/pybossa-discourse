@@ -184,13 +184,14 @@ class TestClient(Test):
         assert mock_request.called_with('GET', url, params)
 
 
-    @patch('pybossa_discourse.client.Client.create_user', new=mock_create)
+    @patch('pybossa_discourse.client.DiscourseClient._create_user')
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_get_username_returns_none_when_create_user_fails(self):
+    def test_get_name_returns_none_when_create_user_fails(self, mock_create):
+        mock_create.return_value = []
         endpoint = '/admin/users/list/all.json'
         url = '{0}{1}'.format(self.url, endpoint)
         params = {'filter': 'me@me.com'}
-        self.client._get_username('something')
+        self.client._get_username()
 
         assert mock_request.called_with('GET', url, params)
