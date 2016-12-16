@@ -2,6 +2,7 @@
 """Jinja globals module for pybossa-discourse."""
 
 from flask import Markup, request
+from . import discourse_client
 
 
 class DiscourseGlobals(object):
@@ -32,3 +33,11 @@ class DiscourseGlobals(object):
                 }}
             </script>
         """).format(self.url, request.base_url)
+
+    def notifications(self):
+        """Return a count of unread notifications for the current user."""
+        notifications = discourse_client.user_notifications()
+        if not notifications:
+            return 0
+        return sum([1 for n in notifications['notifications']
+                    if not n['read']])
