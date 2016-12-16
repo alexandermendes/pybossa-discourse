@@ -20,6 +20,7 @@ class DiscourseSSO(object):
             self.init_app(app)
 
     def init_app(self, app):
+        """Configure"""
         self.secret = app.config['DISCOURSE_SECRET']
         self.url = app.config['DISCOURSE_URL']
 
@@ -59,7 +60,7 @@ class DiscourseSSO(object):
                        'sso_secret': self.secret
                        }
 
-        # Add the avatar URL
+        # Add the user avatar URL
         info = current_user.info
         if info.get('container') and info.get('avatar'):
             root = request.url_root.rstrip('/')
@@ -71,7 +72,7 @@ class DiscourseSSO(object):
             credentials.update(avatar_details)
         return credentials
 
-    def validate(self, payload, sig):
+    def get_sso_login_url(self, payload, sig):
         """Validate payload and return SSO url.
 
         :param payload: The inbound payload.
@@ -83,11 +84,7 @@ class DiscourseSSO(object):
         return url
 
     def get_sso_url(self):
-        """Return Discourse SSO URL, if the current user is not anonymous.
-
-        :returns: Discourse SSO URL, or Discourse base URL if the current user
-        is anonymous.
-        """
+        """Return SSO URL, or the Discourse base URL if anonymous user."""
         if current_user.is_anonymous():
             return self.url
         return '{0}/session/sso?return_path=%2F'.format(self.url)
