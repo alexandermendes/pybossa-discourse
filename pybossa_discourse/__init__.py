@@ -48,6 +48,5 @@ class PyBossaDiscourse(Plugin):
 
     def setup_blueprint(self):
         """Setup blueprint."""
-        from .blueprint import DiscourseBlueprint
-        blueprint = DiscourseBlueprint()
+        from .view import blueprint
         app.register_blueprint(blueprint, url_prefix="/discourse")

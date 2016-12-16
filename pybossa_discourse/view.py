@@ -7,6 +7,10 @@ from flask.ext.login import current_user
 from . import discourse_sso, discourse_client
 
 
+blueprint = Blueprint('discourse', __name__)
+
+
+@blueprint.route('/index')
 def index():
     """Attempt to sign in via SSO then redirect to Discourse."""
     try:
@@ -16,6 +20,7 @@ def index():
         return redirect(url_for('home.home'))
 
 
+@blueprint.route('/oauth-authorized')
 def oauth_authorized():
     """Authorise a Discourse login."""
     sso = request.args.get('sso')
@@ -32,6 +37,7 @@ def oauth_authorized():
         return redirect(url_for('home.home'))
 
 
+@blueprint.route('/signout')
 def signout():
     """Signout the current user from both PyBossa and Discourse."""
     if not current_user.is_anonymous():
