@@ -21,7 +21,7 @@ class DiscourseGlobals(object):
                     discourseEmbedUrl: {1}
                 }};
 
-                (function() {{
+                window.onload = function() {{
                     let d = document.createElement('script'),
                         head = document.getElementsByTagName('head')[0],
                         body = document.getElementsByTagName('body')[0];
@@ -29,6 +29,6 @@ class DiscourseGlobals(object):
                     d.async = true;
                     d.src = '{0}/javascripts/embed.js';
                     (head || body).appendChild(d);
-                }})();
+                }});
             </script>
         """).format(self.url, request.base_url)

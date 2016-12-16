@@ -129,7 +129,7 @@ To embed Discourse comments in your PyBossa theme:
 
 .. code-block:: HTML+Django
     {% if 'pybossa_discourse' in plugins %}
-        {{ discourse.comments }}
+        {{ discourse.comments() }}
     {% endif %}
 
 A new Discourse topic will be created for each page on which the above snippet appears the first time
