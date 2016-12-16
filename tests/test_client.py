@@ -111,14 +111,6 @@ class TestClient(Test):
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_user_messages(self):
-        endpoint = '/topics/private-messages/joebloggs.json'
-        url = '{0}{1}'.format(self.url, endpoint)
-        self.client.user_messages()
-        assert mock_request.called_with('GET', url, dict())
-
-    @patch('pybossa_discourse.client.current_user', new=mock_user)
-    @patch('pybossa_discourse.client.requests.request', new=mock_request)
     def test_user_notifications(self):
         endpoint = '/notifications.json'
         url = '{0}{1}'.format(self.url, endpoint)

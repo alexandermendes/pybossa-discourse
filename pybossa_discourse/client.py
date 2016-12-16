@@ -86,7 +86,8 @@ class DiscourseClient(object):
     def categories(self):
         """Return all categories."""
         endpoint = '/categories.json'
-        return self._get(endpoint)
+        res = self._get(endpoint)
+        return res.category_list.categories
 
     def category(self, category_id):
         """Return all topics in a category.
@@ -94,7 +95,8 @@ class DiscourseClient(object):
         :param category_id: The ID of the category.
         """
         endpoint = '/c/{0}.json'.format(category_id)
-        return self._get(endpoint)
+        res = self._get(endpoint)
+        return res.topic_list.topics
 
     def subtopics(self, category_id, p_category_id):
         """Return the topics in a sub-category.
@@ -103,7 +105,8 @@ class DiscourseClient(object):
         :param category_id: The ID of the category.
         """
         endpoint = '/c/{0}/{1}.json'.format(p_category_id, category_id)
-        return self._get(endpoint)
+        res = self._get(endpoint)
+        return res.topic_list.topics
 
     def topic(self, topic_id):
         """Return a specific topic.
@@ -121,7 +124,8 @@ class DiscourseClient(object):
         endpoint = '/new.json'
         if category_id:
             endpoint = '/c/{0}/l{1}'.format(category_id, endpoint)
-        return self._get(endpoint)
+        res = self._get(endpoint)
+        return res.topic_list.topics
 
     def latest_topics(self, category_id=None):
         """Return the latest topics.
@@ -131,7 +135,8 @@ class DiscourseClient(object):
         endpoint = '/latest.json'
         if category_id:
             endpoint = '/c/{0}/l{1}'.format(category_id, endpoint)
-        return self._get(endpoint)
+        res = self._get(endpoint)
+        return res.topic_list.topics
 
     def top_topics(self, category_id=None):
         """Return the top topics.
@@ -141,7 +146,8 @@ class DiscourseClient(object):
         endpoint = '/top.json'
         if category_id:
             endpoint = '/c/{0}/l{1}'.format(category_id, endpoint)
-        return self._get(endpoint)
+        res = self._get(endpoint)
+        return res.topic_list.topics
 
     def user_details(self):
         """Return the current user's details."""
@@ -163,16 +169,8 @@ class DiscourseClient(object):
 
         endpoint = '/user_actions.json'
         params = {'username': username}
-        return self._get(endpoint, params)
-
-    def user_messages(self):
-        """Return the current user's private messages."""
-        username = self._get_username()
-        if not username:
-            return []
-
-        endpoint = '/topics/private-messages/{0}.json'.format(username)
-        return self._get(endpoint)
+        res = self._get(endpoint, params)
+        return res.user_actions
 
     def user_notifications(self):
         """Return the current user's notifications."""
@@ -182,7 +180,8 @@ class DiscourseClient(object):
 
         endpoint = '/notifications.json'
         params = {'username': username}
-        return self._get(endpoint, params)
+        res = self._get(endpoint, params)
+        return res.notifications
 
     def user_signout(self):
         """Sign out the current user from Discourse."""

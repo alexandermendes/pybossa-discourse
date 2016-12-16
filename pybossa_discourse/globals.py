@@ -40,5 +40,4 @@ class DiscourseGlobals(object):
         notifications = discourse_client.user_notifications()
         if not notifications:
             return 0
-        return sum([1 for n in notifications['notifications']
-                    if not n['read']])
+        return sum([1 for n in notifications if not n['read']])
