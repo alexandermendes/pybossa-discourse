@@ -37,31 +37,31 @@ class TestClient(Test):
         assert mock_request.called_with('GET', url, dict())
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_category_topics_latest(self):
+    def test_latest_topics_in_category(self):
         endpoint = '/c/1/l/latest.json'
         url = '{0}{1}'.format(self.url, endpoint)
-        self.client.category_topics_latest(1)
+        self.client.latest_topics(1)
         assert mock_request.called_with('GET', url, dict())
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_category_topics_new(self):
+    def test_new_topics_in_category(self):
         endpoint = '/c/1/l/new.json'
         url = '{0}{1}'.format(self.url, endpoint)
-        self.client.category_topics_new(1)
+        self.client.new_topics(1)
         assert mock_request.called_with('GET', url, dict())
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_category_topics_top(self):
+    def test_top_topics_in_category(self):
         endpoint = '/c/1/l/top.json'
         url = '{0}{1}'.format(self.url, endpoint)
-        self.client.category_topics_top(1)
+        self.client.top_topics(1)
         assert mock_request.called_with('GET', url, dict())
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_category_topics_subtopics(self):
+    def test_subtopics(self):
         endpoint = '/c/2/1.json'
         url = '{0}{1}'.format(self.url, endpoint)
-        self.client.category_topics_subtopics(1, 2)
+        self.client.subtopics(1, 2)
         assert mock_request.called_with('GET', url, dict())
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
@@ -72,17 +72,24 @@ class TestClient(Test):
         assert mock_request.called_with('GET', url, dict())
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_topics_latest(self):
-        endpoint = '/latest.json'
+    def test_new_topics(self):
+        endpoint = '/new.json'
         url = '{0}{1}'.format(self.url, endpoint)
-        self.client.topics_latest()
+        self.client.new_topics()
         assert mock_request.called_with('GET', url, dict())
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_topics_top(self):
+    def test_latest_topics(self):
+        endpoint = '/latest.json'
+        url = '{0}{1}'.format(self.url, endpoint)
+        self.client.latest_topics()
+        assert mock_request.called_with('GET', url, dict())
+
+    @patch('pybossa_discourse.client.requests.request', new=mock_request)
+    def test_top_topics(self):
         endpoint = '/top.json'
         url = '{0}{1}'.format(self.url, endpoint)
-        self.client.topics_top()
+        self.client.top_topics()
         assert mock_request.called_with('GET', url, dict())
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
@@ -118,12 +125,6 @@ class TestClient(Test):
         params = {'username': 'joebloggs'}
         self.client.user_notifications()
         assert mock_request.called_with('GET', url, params)
-
-    @patch('pybossa_discourse.client.current_user', new=mock_user)
-    @patch('pybossa_discourse.client.requests.request', new=mock_request)
-    def test_anon_user_unread_notifications_count(self):
-        res = self.client.user_unread_notifications_count()
-        assert res is None
 
     @patch('pybossa_discourse.client.current_user', new=mock_user)
     @patch('pybossa_discourse.client.requests.request', new=mock_request)

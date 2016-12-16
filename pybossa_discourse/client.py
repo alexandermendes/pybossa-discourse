@@ -96,31 +96,7 @@ class DiscourseClient(object):
         endpoint = '/c/{0}.json'.format(category_id)
         return self._get(endpoint)
 
-    def category_topics_latest(self, category_id):
-        """Return the latest topics in a category.
-
-        :param category_id: The ID of the category.
-        """
-        endpoint = '/c/{0}/l/latest.json'.format(category_id)
-        return self._get(endpoint)
-
-    def category_topics_new(self, category_id):
-        """Return the newest topics in a category.
-
-        :param category_id: The ID of the category.
-        """
-        endpoint = '/c/{0}/l/new.json'.format(category_id)
-        return self._get(endpoint)
-
-    def category_topics_top(self, category_id):
-        """Return the top topics in a category.
-
-        :param category_id: The ID of the category.
-        """
-        endpoint = '/c/{0}/l/top.json'.format(category_id)
-        return self._get(endpoint)
-
-    def category_topics_subtopics(self, category_id, p_category_id):
+    def subtopics(self, category_id, p_category_id):
         """Return the topics in a sub-category.
 
         :param p_category_id: The ID of the parent category.
@@ -137,21 +113,41 @@ class DiscourseClient(object):
         endpoint = '/t/{0}.json'.format(topic_id)
         return self._get(endpoint)
 
-    def topics_latest(self):
-        """Return the latest topics."""
-        endpoint = '/latest.json'
+    def new_topics(self, category_id=None):
+        """Return the newest topics in a category.
+
+        :param category_id: Optional category ID by which to filter topics.
+        """
+        endpoint = '/new.json'
+        if category_id:
+            endpoint = '/c/{0}/l{1}'.format(category_id, endpoint)
         return self._get(endpoint)
 
-    def topics_top(self):
-        """Return the top topics."""
+    def latest_topics(self, category_id=None):
+        """Return the latest topics.
+
+        :param category_id: Optional category ID by which to filter topics.
+        """
+        endpoint = '/latest.json'
+        if category_id:
+            endpoint = '/c/{0}/l{1}'.format(category_id, endpoint)
+        return self._get(endpoint)
+
+    def top_topics(self, category_id=None):
+        """Return the top topics.
+
+        :param category_id: Optional category ID by which to filter topics.
+        """
         endpoint = '/top.json'
+        if category_id:
+            endpoint = '/c/{0}/l{1}'.format(category_id, endpoint)
         return self._get(endpoint)
 
     def user_details(self):
         """Return the current user's details."""
         username = self._get_username()
         if not username:
-            return None
+            return []
 
         endpoint = '/users/{0}.json'.format(username)
         return self._get(endpoint)
@@ -163,7 +159,7 @@ class DiscourseClient(object):
         """
         username = self._get_username()
         if not username:
-            return None
+            return []
 
         endpoint = '/user_actions.json'
         params = {'username': username}
@@ -173,7 +169,7 @@ class DiscourseClient(object):
         """Return the current user's private messages."""
         username = self._get_username()
         if not username:
-            return None
+            return []
 
         endpoint = '/topics/private-messages/{0}.json'.format(username)
         return self._get(endpoint)
@@ -182,22 +178,11 @@ class DiscourseClient(object):
         """Return the current user's notifications."""
         username = self._get_username()
         if not username:
-            return None
+            return []
 
         endpoint = '/notifications.json'
         params = {'username': username}
         return self._get(endpoint, params)
-
-    def user_unread_notifications_count(self):
-        """Return a count of unread notifications for the current user."""
-        username = self._get_username()
-        if not username:
-            return None
-
-        notifications = self.user_notifications()
-        count = sum([1 for n in notifications['notifications']
-                     if not n['read']])
-        return count
 
     def user_signout(self):
         """Sign out the current user from Discourse."""
