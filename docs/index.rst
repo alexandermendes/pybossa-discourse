@@ -123,7 +123,7 @@ To embed Discourse comments in your PyBossa theme:
 
 1. Visit **Admin > Customize > Embedding** in your Discourse application.
 2. Create an embeddable host using your PyBossa domain as the hostname, not
-   including the `http://` or path (e.g. `example.com`).
+   including the `http://` or path (e.g. `www.example.com`).
 3. Enter the name of the Discourse user who will create topics in the **Embed by Username** field.
 4. Use the following snippet wherever you want comments to appear in your PyBossa theme.
 

@@ -14,11 +14,11 @@ class DiscourseGlobals(object):
     def comments(self):
         """Return an HTML snippet used to embed Discourse comments."""
         return Markup("""
-            <div id='discourse-comments'></div>
+            <div id="discourse-comments"></div>
             <script type="text/javascript">
                 DiscourseEmbed = {{
-                    discourseUrl: {0},
-                    discourseEmbedUrl: {1}
+                    discourseUrl: '{0}/',
+                    discourseEmbedUrl: '{1}'
                 }};
 
                 window.onload = function() {{
@@ -29,6 +29,6 @@ class DiscourseGlobals(object):
                     d.async = true;
                     d.src = '{0}/javascripts/embed.js';
                     (head || body).appendChild(d);
-                }});
+                }}
             </script>
         """).format(self.url, request.base_url)
