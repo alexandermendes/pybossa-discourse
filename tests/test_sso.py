@@ -68,7 +68,7 @@ class TestSSO(Test):
     @patch('pybossa_discourse.sso.current_user', return_value=mock_user)
     def test_url_built_with_valid_parameters(self, mock_request, mock_url,
                                              mock_user):
-        url = self.discourse_sso.validate(self.payload, self.sig)
+        url = self.discourse_sso.get_sso_login_url(self.payload, self.sig)
         assert 'sso' in url and 'sig' in url
 
     @patch('pybossa_discourse.sso.current_user', return_value=mock_user)
