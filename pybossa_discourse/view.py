@@ -13,11 +13,8 @@ blueprint = Blueprint('discourse', __name__)
 @blueprint.route('/index')
 def index():
     """Attempt to sign in via SSO then redirect to Discourse."""
-    try:
-        return redirect(discourse_sso.signin())
-    except AttributeError as e:  # pragma: no cover
-        flash('Access Denied: {0}'.format(str(e)), 'error')
-        return redirect(url_for('home.home'))
+    sso_url = discourse_sso.get_sso_url()
+    return redirect(sso_url)
 
 
 @blueprint.route('/oauth-authorized')
