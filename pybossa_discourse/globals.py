@@ -10,6 +10,7 @@ class DiscourseGlobals(object):
 
     def __init__(self, app):
         self.url = app.config['DISCOURSE_URL']
+        self.api = discourse_client
         app.jinja_env.globals.update(discourse=self)
 
     def comments(self):
