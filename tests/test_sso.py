@@ -81,6 +81,7 @@ class TestSSO(Test):
     @patch('pybossa_discourse.sso.current_user', return_value=mock_user)
     def test_sso_url_returned_to_authenticated_users(self, mock_user):
         mock_user.is_anonymous.return_value = False
-        expected = '{0}/session/sso?return_path=%2F'.format(self.discourse_sso.url)
+        base_url = self.discourse_sso.url
+        expected = '{0}/session/sso?return_path=%2F'.format(base_url)
         actual = self.discourse_sso.get_sso_url()
         assert expected == actual
