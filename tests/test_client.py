@@ -3,6 +3,8 @@
 import json
 from default import Test
 from mock import patch, MagicMock
+from pybossa_discourse.client import DiscourseClient
+
 
 mock_request = MagicMock()
 headers = {'content-type': 'application/json; charset=utf-8'}
@@ -15,10 +17,10 @@ mock_user.email_addr.return_value = 'joebloggs'
 
 class TestClient(Test):
 
-    def setUp(self):
+    def setup(self):
         super(TestClient, self).setUp()
-        self.client = self.flask_app.extensions['discourse']['client']
         self.url = self.flask_app.config['DISCOURSE_URL']
+        self.client = DiscourseClient(self.flask_app)
 
     @patch('pybossa_discourse.client.requests.request', new=mock_request)
     def test_categories(self):

@@ -9,7 +9,7 @@ import pybossa_discourse as plugin
 sys.path.append(os.path.abspath("./pybossa/test"))
 
 
-def setUpPackage():
+def setup_package():
     """Setup the plugin."""
     from default import flask_app
     with flask_app.app_context():
