@@ -186,12 +186,10 @@ class DiscourseClient(object):
     def user_signout(self):
         """Sign out the current user from Discourse."""
         details = self.user_details()
-        if not details:
-            return None
-
-        user_id = details['user']['id']
-        endpoint = '/admin/users/{0}/log_out'.format(user_id)
-        return self._post(endpoint)
+        if details:
+            user_id = details['user']['id']
+            endpoint = '/admin/users/{0}/log_out'.format(user_id)
+            self._post(endpoint)
 
     def badges(self):
         """Return all badges."""
