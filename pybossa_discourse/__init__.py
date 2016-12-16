@@ -11,6 +11,7 @@ import json
 from flask import current_app as app
 from flask.ext.plugins import Plugin
 from .extensions import discourse_client, discourse_sso
+from .globals import DiscourseGlobals
 
 __plugin__ = "PyBossaDiscourse"
 __version__ = json.load(open(os.path.join(os.path.dirname(__file__),
@@ -43,7 +44,7 @@ class PyBossaDiscourse(Plugin):
 
         discourse_client.init_app(app)
         discourse_sso.init_app(app)
-        app.jinja_env.globals.update(discourse=discourse_client)
+        DiscourseGlobals(app)
         self.setup_blueprint()
 
     def setup_blueprint(self):

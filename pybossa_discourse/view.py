@@ -1,13 +1,12 @@
 # -*- coding: utf8 -*-
 """Views module for pybossa-discourse."""
 
-from flask import Blueprint, request, url_for, flash, redirect
-from flask import current_app as app
+from flask import Blueprint, request, url_for, flash, redirect, abort
 from flask.ext.login import current_user
 from . import discourse_sso, discourse_client
 
 
-blueprint = Blueprint('discourse', __name__)
+blueprint = Blueprint('discourse', __name__, template_folder='templates')
 
 
 @blueprint.route('/index')
@@ -44,3 +43,12 @@ def signout():
         except (ValueError, AttributeError) as e:  # pragma: no cover
             flash('Discourse Logout Failed: {0}'.format(str(e)), 'error')
     return redirect(url_for('account.signout'))
+
+
+@blueprint.route('/comments')
+def comments():
+    """Return an HTML snippet used to embed Discourse comments."""
+    discourse_url = request.args.get('discourse_url')
+    if not discourse_url:
+        abort(400)
+    return render_template('comments.html', discourse_url=discourse_url)
