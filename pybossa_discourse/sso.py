@@ -41,9 +41,8 @@ class DiscourseSSO(object):
         nonce = decoded.split('=')[1].split('&')[0]
         return nonce
 
-    def _build_return_payload(self, nonce):
-        """Construct the return url."""
-        credentials = self._get_credentials(nonce)
+    def _build_return_query(self, credentials):
+        """Construct the return query string."""
         return_payload = base64.encodestring(urllib.urlencode(credentials))
         h = hmac.new(self.secret, return_payload, digestmod=hashlib.sha256)
         query_string = urllib.urlencode({'sso': return_payload,
@@ -84,7 +83,8 @@ class DiscourseSSO(object):
         :param sig: The signature.
         """
         nonce = self._validate_payload(payload, sig)
-        payload = self._build_return_payload(nonce)
+        credentials = self._get_credentials(nonce)
+        payload = self._build_return_query(credentials)
         url = '{0}/session/sso_login?{1}'.format(self.url, payload)
         return url
 

@@ -1,8 +1,8 @@
 # -*- coding: utf8 -*-
 
 import base64
-import hmac
-import hashlib
+import urlparse
+import urllib
 from default import Test, flask_app, with_context
 from nose.tools import assert_raises
 from mock import patch, MagicMock
@@ -19,8 +19,8 @@ class TestSSO(Test):
         self.sig = '2828aa29899722b35a2f191d34ef9b3ce695e0e6eeec47deb46d588' \
                    'd70c7cb56'
 
-    def test_validation_fails_when_no_nonce_in_payload(self):
-        pl = base64.encodestring('something')
+    def test_validation_fails_when_nonce_missing_from_payload(self):
+        pl = base64.encodestring('')
         assert_raises(ValueError, discourse_sso._validate_payload, pl,
                       self.sig)
 
@@ -64,13 +64,30 @@ class TestSSO(Test):
             actual = discourse_sso._get_credentials(self.nonce)
         assert cmp(actual, expected) == 0
 
-    @patch('pybossa_discourse.sso.request')
-    @patch('pybossa_discourse.sso.url_for', return_value='')
+    def test_valid_return_query_string_built(self):
+        credentials = {'nonce': self.nonce,
+                       'email': 'joebloggs@example.com',
+                       'name': 'JoeBloggs',
+                       'username': 'joebloggs',
+                       'external_id': '1',
+                       'sso_secret': 'some_secret'}
+        query_string = discourse_sso._build_return_query(credentials)
+        params = urlparse.parse_qs(query_string)
+        sso = params['sso'][0]
+        sso = base64.decodestring(sso)
+        sso = urllib.unquote(sso)
+        sso = dict((p.split('=') for p in sso.split('&')))
+        assert cmp(sso, credentials) == 0
+
+    @with_context
     @patch('pybossa_discourse.sso.current_user')
-    def test_url_built_with_valid_parameters(self, mock_request, mock_url,
-                                             mock_user):
-        url = discourse_sso.get_sso_login_url(self.payload, self.sig)
-        assert 'sso' in url and 'sig' in url
+    def test_valid_sso_login_url_built(self, mock_user):
+        with self.flask_app.test_request_context('/'):
+            url = discourse_sso.get_sso_login_url(self.payload, self.sig)
+        parsed_url = urlparse.urlparse(url)
+        params = urlparse.parse_qs(parsed_url.query)
+        assert parsed_url.path == '/session/sso_login'
+        assert 'sso' in params and 'sig' in params
 
     @patch('pybossa_discourse.sso.current_user')
     def test_base_url_returned_to_anonymous_users(self, mock_user):
