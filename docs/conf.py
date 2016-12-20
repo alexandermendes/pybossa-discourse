@@ -11,7 +11,7 @@
 # serve to show the default.
 
 import sys
-import re
+import json
 import os
 import sphinx_rtd_theme
 
@@ -53,9 +53,8 @@ author = 'Alexander Mendes'
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
-version = re.search('^__version__\s*=\s*"(.*)"',
-                    open('../pybossa_discourse/__init__.py').read(),
-                    re.M).group(1)
+version = json.load(open('../pybossa_discourse/info.json'))['version']
+
 # The short X.Y version.
 version = version
 # The full version, including alpha/beta/rc tags.
