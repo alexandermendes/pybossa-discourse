@@ -10,8 +10,8 @@ import os
 import json
 from flask import current_app as app
 from flask.ext.plugins import Plugin
-from .client import DiscourseClient
-from .sso import DiscourseSSO
+from .extensions import discourse_client, discourse_sso
+from .globals import DiscourseGlobals
 
 __plugin__ = "PyBossaDiscourse"
 __version__ = json.load(open(os.path.join(os.path.dirname(__file__),
@@ -26,44 +26,28 @@ DISCOURSE_SETTINGS = ('DISCOURSE_API_KEY',
 class PyBossaDiscourse(Plugin):
     """PyBossa Discourse plugin class."""
 
-
     def setup(self):
         """Setup the plugin."""
-
-        # Check all settings are provided
         for setting in DISCOURSE_SETTINGS:
             try:
                 app.config[setting]
-            except KeyError:
-                raise ValueError('{} setting not found.'.format(setting))
+            except KeyError as inst:  # pragma: no cover
+                msg = "PyBossa Discourse disabled"
+                print type(inst)
+                print inst.args
+                print inst
+                print msg
+                log_message = '{0}: {1}'.format(msg, str(inst))
+                app.logger.info(log_message)
+                self.disable()
+                return
 
-        # Application specific state
-        app.extensions['discourse'] = {'client': None, 'sso': None}
-
-        self.setup_client()
-        self.setup_sso()
-        self.setup_global_envar()
+        discourse_client.init_app(app)
+        discourse_sso.init_app(app)
+        DiscourseGlobals(app)
         self.setup_blueprint()
-
-
-    def setup_client(self):
-        """Setup the Discourse client."""
-        app.extensions['discourse']['client'] = DiscourseClient(app)
-
-
-    def setup_sso(self):
-        """Setup Discourse SSO."""
-        app.extensions['discourse']['sso'] = DiscourseSSO(app)
-
-
-    def setup_global_envar(self):
-        """Setup global environment variable."""
-        client = app.extensions['discourse']['client']
-        app.jinja_env.globals.update(discourse=client)
-
 
     def setup_blueprint(self):
         """Setup blueprint."""
-        from .blueprint import DiscourseBlueprint
-        blueprint = DiscourseBlueprint()
+        from .view import blueprint
         app.register_blueprint(blueprint, url_prefix="/discourse")
