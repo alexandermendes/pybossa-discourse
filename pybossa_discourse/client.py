@@ -47,13 +47,15 @@ class DiscourseClient(object):
         """Make a POST request."""
         return self._request('POST', endpoint, params)
 
+    def _get_unique_id(self):
+        """Return a unique ID."""
+        return str(uuid.uuid4().get_hex().upper()[0:15])
+
     def _create_user(self):
         """Create a new Discourse user based on the current users email."""
         endpoint = '/users'
-        random_name = str(uuid.uuid4().get_hex().upper()[0:15])
-        random_username = str(uuid.uuid4().get_hex().upper()[0:15])
-        params = {'name': random_name,
-                  'username': random_username,
+        params = {'name': self._get_unique_id(),
+                  'username': self._get_unique_id(),
                   'email': current_user.email_addr,
                   'password': 'P@ssword',
                   'active': 'true',
@@ -71,13 +73,17 @@ class DiscourseClient(object):
         endpoint = '/admin/users/list/all.json'
         params = {'filter': current_user.email_addr}
         res = self._get(endpoint, params)
+        print res
 
         # Attempt to create a new user
         if len(res) == 0:
             self._create_user()
             res = self._get(endpoint, params)
 
-        return res[0]['username'] if len(res) != 0 else None
+        if len(res) == 0:
+            return None
+
+        return res[0]['username']
 
     def categories(self):
         """Return all categories."""
@@ -110,7 +116,8 @@ class DiscourseClient(object):
         :param topic_id: The ID of the topic.
         """
         endpoint = '/t/{0}.json'.format(topic_id)
-        return self._get(endpoint)
+        res = self._get(endpoint)
+        return res['post_stream']['posts']
 
     def new_topics(self, category_id=None):
         """Return the newest topics in a category.
@@ -148,11 +155,12 @@ class DiscourseClient(object):
     def user_details(self):
         """Return the current user's details."""
         username = self._get_username()
-        if not username:
+        if not username:    # pragma: no cover
             return []
 
         endpoint = '/users/{0}.json'.format(username)
-        return self._get(endpoint)
+        res = self._get(endpoint)
+        return res['users']['user']
 
     def user_activity(self):
         """Return the current user's recent activity.
@@ -160,7 +168,7 @@ class DiscourseClient(object):
         :param username: The user's Discourse username.
         """
         username = self._get_username()
-        if not username:
+        if not username:    # pragma: no cover
             return []
 
         endpoint = '/user_actions.json'
@@ -171,7 +179,7 @@ class DiscourseClient(object):
     def user_notifications(self):
         """Return the current user's notifications."""
         username = self._get_username()
-        if not username:
+        if not username:  # pragma: no cover
             return []
 
         endpoint = '/notifications.json'
@@ -190,7 +198,8 @@ class DiscourseClient(object):
     def badges(self):
         """Return all badges."""
         endpoint = '/admin/badges.json'
-        return self._get(endpoint)
+        res = self._get(endpoint)
+        return res['badges']
 
     def search(self, query):
         """Perform a search.
