@@ -50,6 +50,18 @@ class DiscourseSSO(object):
                                          'sig': h.hexdigest()})
         return query_string
 
+    def _get_avatar_url(self):
+        """Return the avatar URL for the current user."""
+        container = current_user.info.get('container', None)
+        avatar = current_user.info.get('avatar', None)
+        if not container or not avatar:
+            return None
+        root = request.url_root.rstrip('/')
+        filename = '{0}/{1}'.format(container, avatar)
+        file_url = url_for('uploads.uploaded_file', filename=filename)
+        avatar_url = '{0}{1}'.format(root, file_url)
+        return avatar_url
+
     def _get_credentials(self, nonce):
         """Return credentials for the current user."""
         credentials = {'nonce': nonce,
@@ -59,6 +71,11 @@ class DiscourseSSO(object):
                        'external_id': current_user.id,
                        'sso_secret': self.secret
                        }
+        avatar_url = self._get_avatar_url()
+        if avatar_url:
+            credentials.update({'avatar_url': avatar_url,
+                                'avatar_force_update': 'true'})
+        return credentials
 
         # Add the user avatar URL
         info = current_user.info
