@@ -47,10 +47,6 @@ class DiscourseClient(object):
         """Make a POST request."""
         return self._request('POST', endpoint, params)
 
-    def _put(self, endpoint, params=dict()):
-        """Make a PUT request."""
-        return self._request('PUT', endpoint, params)
-
     def _create_user(self):
         """Create a new Discourse user based on the current users email."""
         endpoint = '/users'
@@ -87,7 +83,7 @@ class DiscourseClient(object):
         """Return all categories."""
         endpoint = '/categories.json'
         res = self._get(endpoint)
-        return res['category_list.categories']
+        return res['category_list']['categories']
 
     def category(self, category_id):
         """Return all topics in a category.
@@ -96,7 +92,7 @@ class DiscourseClient(object):
         """
         endpoint = '/c/{0}.json'.format(category_id)
         res = self._get(endpoint)
-        return res['topic_list.topics']
+        return res['topic_list']['topics']
 
     def subtopics(self, category_id, p_category_id):
         """Return the topics in a sub-category.
@@ -106,7 +102,7 @@ class DiscourseClient(object):
         """
         endpoint = '/c/{0}/{1}.json'.format(p_category_id, category_id)
         res = self._get(endpoint)
-        return res['topic_list.topics']
+        return res['topic_list']['topics']
 
     def topic(self, topic_id):
         """Return a specific topic.
