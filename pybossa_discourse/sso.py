@@ -77,18 +77,6 @@ class DiscourseSSO(object):
                                 'avatar_force_update': 'true'})
         return credentials
 
-        # Add the user avatar URL
-        info = current_user.info
-        if info.get('container') and info.get('avatar'):
-            root = request.url_root.rstrip('/')
-            filename = '{0}/{1}'.format(info['container'], info['avatar'])
-            file_url = url_for('uploads.uploaded_file', filename=filename)
-            avatar_details = {'avatar_url': '{0}{1}'.format(root, file_url),
-                              'avatar_force_update': 'true'
-                              }
-            credentials.update(avatar_details)
-        return credentials
-
     def get_sso_login_url(self, payload, sig):
         """Validate payload and return SSO url.
 
