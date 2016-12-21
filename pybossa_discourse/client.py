@@ -158,7 +158,7 @@ class DiscourseClient(object):
 
         endpoint = '/users/{0}.json'.format(username)
         res = self._get(endpoint)
-        return res['users']['user']
+        return res['user']
 
     def user_activity(self):
         """Return the current user's recent activity.
