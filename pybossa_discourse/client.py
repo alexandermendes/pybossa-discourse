@@ -4,7 +4,6 @@
 import uuid
 import requests
 from flask.ext.login import current_user
-from pybossa.error import ErrorStatus
 
 
 class DiscourseClient(object):
@@ -21,7 +20,6 @@ class DiscourseClient(object):
         self.url = app.config['DISCOURSE_URL']
         self.api_key = app.config['DISCOURSE_API_KEY']
         self.api_username = app.config['DISCOURSE_API_USERNAME']
-        self.error_status = ErrorStatus()
 
     def _request(self, verb, endpoint, params):
         """Make a request."""
