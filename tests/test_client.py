@@ -159,7 +159,7 @@ class TestClient(Test):
     @patch('pybossa_discourse.client.DiscourseClient.user_details')
     def test_user_signout(self, mock_user_details, mock_request):
         mock_request.return_value = mock_response
-        mock_user_details.return_value = {"user": {"id": 1}}
+        mock_user_details.return_value = {"id": 1}
         endpoint = '/admin/users/1/log_out'
         url = '{0}{1}'.format(self.url, endpoint)
         params = self.get_params()

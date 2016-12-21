@@ -189,7 +189,7 @@ class DiscourseClient(object):
         """Sign out the current user from Discourse."""
         details = self.user_details()
         if details:
-            user_id = details['user']['id']
+            user_id = details['id']
             endpoint = '/admin/users/{0}/log_out'.format(user_id)
             self._post(endpoint)
 
