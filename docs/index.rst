@@ -3,8 +3,7 @@ pybossa-discourse
 
 A PyBossa plugin for Discourse integration.
 
-Features:
-
+**Features:**
   - Use SSO to sign your PyBossa users into Discourse
   - Make Discourse API requests from your PyBossa theme
   - Add users' unread Discourse notification counts to your PyBossa theme
@@ -135,17 +134,15 @@ variable, for example:
 .. code-block:: HTML+Django
 
     <!-- List the latest topics -->
+    {% if 'pybossa_discourse' in plugins %}
     <ul>
         {% for topic in discourse.api.latest_topics() %}
         <li>{{ topic['title'] }}</li>
         {% endfor %}
     </ul>
+    {% endif %}
 
-See the API documentation below for full details of the methods available.
-
-
-API
-===
+The variable points to an instance of DiscourseClient, which exposes the following methods:
 
 .. module:: pybossa_discourse.client
 

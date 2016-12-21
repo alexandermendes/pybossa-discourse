@@ -92,7 +92,7 @@ class DiscourseClient(object):
         return res['category_list']['categories']
 
     def category(self, category_id):
-        """Return all topics in a category.
+        """Return a category.
 
         :param category_id: The ID of the category.
         """
@@ -100,18 +100,18 @@ class DiscourseClient(object):
         res = self._get(endpoint)
         return res['topic_list']['topics']
 
-    def subtopics(self, category_id, p_category_id):
+    def subtopics(self, category_id, parent_category_id):
         """Return the topics in a sub-category.
 
-        :param p_category_id: The ID of the parent category.
+        :param parent_category_id: The ID of the parent category.
         :param category_id: The ID of the category.
         """
-        endpoint = '/c/{0}/{1}.json'.format(p_category_id, category_id)
+        endpoint = '/c/{0}/{1}.json'.format(parent_category_id, category_id)
         res = self._get(endpoint)
         return res['topic_list']['topics']
 
     def topic(self, topic_id):
-        """Return a specific topic.
+        """Return a topic.
 
         :param topic_id: The ID of the topic.
         """
@@ -120,7 +120,7 @@ class DiscourseClient(object):
         return res['post_stream']['posts']
 
     def new_topics(self, category_id=None):
-        """Return the newest topics in a category.
+        """Return the newest topics.
 
         :param category_id: Optional category ID by which to filter topics.
         """
@@ -202,7 +202,7 @@ class DiscourseClient(object):
         return res['badges']
 
     def search(self, query):
-        """Perform a search.
+        """Return the results of a search.
 
         :param query: The search query.
         """
