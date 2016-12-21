@@ -4,10 +4,11 @@ pybossa-discourse
 A PyBossa plugin for Discourse integration.
 
 Features:
-- Use SSO to sign your PyBossa users into Discourse
-- Make Discourse API requests from your PyBossa theme
-- Add users' unread Discourse notification counts to your PyBossa theme
-- Embed Discourse comments into your PyBossa theme
+
+  - Use SSO to sign your PyBossa users into Discourse
+  - Make Discourse API requests from your PyBossa theme
+  - Add users' unread Discourse notification counts to your PyBossa theme
+  - Embed Discourse comments into your PyBossa theme
 
 
 Installation
@@ -20,21 +21,20 @@ the plugin as below and restart the server.
 Configuration
 =============
 
-The following settings should all be added to your PyBossa configuration file:
+The following settings should be added to your PyBossa configuration file:
 
 =================================== ==============================================================
 `DISCOURSE_SECRET`                  Secret string of your choice (at least 10 characters).
 
 `DISCOURSE_API_USERNAME`            Username of an administrator of your Discourse application.
 
-`DISCOURSE_API_KEY`                 The API key generated for the same Discourse administrator
-                                    (visit **Admin > API** in your Discourse application).
+`DISCOURSE_API_KEY`                 The API key generated for the same Discourse administrator.
 
 `DISCOURSE_URL`                     The base URL of your Discourse application.
 =================================== ==============================================================
 
 In order to enable SSO you should also ensure that your Discourse application is configured  as follows
-via **Admin > Settings**:
+(via **Admin > Settings**):
 
 =================================== ==============================================================
 `enable_sso`                        Enabled
@@ -57,7 +57,7 @@ via **Admin > Settings**:
 =================================== ==============================================================
 
 In order for the API client to work you should also make sure that the IP address of your server
-is added to the Discourse whitelist, via **Admin > Logs > Screened IPs**.
+is added to the Discourse whitelist (via **Admin > Logs > Screened IPs**).
 
 
 Theme Integration
@@ -100,6 +100,7 @@ You can add a user's unread Discourse notification count to your PyBossa theme
 with the following snippet:
 
 .. code-block:: HTML+Django
+
     {% if 'pybossa_discourse' in plugins %}
         {{ discourse.notifications() }}
     {% endif %}
@@ -116,6 +117,7 @@ To embed Discourse comments in your PyBossa theme:
 4. Use the following snippet wherever you want comments to appear in your PyBossa theme:
 
 .. code-block:: HTML+Django
+
     {% if 'pybossa_discourse' in plugins %}
         {{ discourse.comments() }}
     {% endif %}
@@ -127,7 +129,7 @@ When people post in that topic, their comments will show up on the page where th
 API variable
 ============
 
-You can make API calls directly from your PyBossa theme via the `discourse.api`
+You can make API calls directly from your PyBossa theme via the **discourse.api**
 variable, for example:
 
 .. code-block:: HTML+Django
@@ -145,7 +147,7 @@ See the API documentation below for full details of the methods available.
 API
 ===
 
-.. module:: pybossa_discourse
+.. module:: pybossa_discourse.client
 
 .. autoclass:: DiscourseClient
    :members:
