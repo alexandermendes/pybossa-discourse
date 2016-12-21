@@ -142,7 +142,7 @@ variable, for example:
     </ul>
     {% endif %}
 
-The variable points to an instance of DiscourseClient, which exposes the following methods:
+The variable points to an instance of **pybossa_discourse.client.DiscourseClient**.
 
 .. module:: pybossa_discourse.client
 
