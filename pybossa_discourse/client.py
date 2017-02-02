@@ -71,7 +71,6 @@ class DiscourseClient(object):
         endpoint = '/admin/users/list/all.json'
         params = {'filter': current_user.email_addr}
         res = self._get(endpoint, params)
-        print res
 
         # Attempt to create a new user
         if len(res) == 0:
