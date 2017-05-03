@@ -13,8 +13,10 @@ class DiscourseGlobals(object):
         self.api = discourse_client
         app.jinja_env.globals.update(discourse=self)
 
-    def comments(self):
+    def comments(self, embedUrl=None):
         """Return an HTML snippet used to embed Discourse comments."""
+        if not embedUrl:
+            embedUrl = request.base_url
         return Markup("""
             <div id="discourse-comments"></div>
             <script type="text/javascript">
@@ -33,7 +35,7 @@ class DiscourseGlobals(object):
                     (head || body).appendChild(d);
                 }}
             </script>
-        """).format(self.url, request.base_url)
+        """).format(self.url, embedUrl)
 
     def notifications(self):
         """Return a count of unread notifications for the current user."""
