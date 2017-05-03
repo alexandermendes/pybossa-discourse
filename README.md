@@ -1,11 +1,8 @@
 # pybossa-discourse
 
-[![Build Status](https://travis-ci.org/alexandermendes/pybossa-discourse.svg?branch=master)]
-(https://travis-ci.org/alexandermendes/pybossa-discourse)
-[![Coverage Status](https://coveralls.io/repos/alexandermendes/pybossa-discourse/badge.svg)]
-(https://coveralls.io/github/alexandermendes/pybossa-discourse?branch=master)
-[![Documentation Status](https://readthedocs.org/projects/pybossa-discourse/badge/?version=latest)
-](http://pybossa-discourse.readthedocs.org/en/latest/?badge=latest)
+[![Build Status](https://travis-ci.org/alexandermendes/pybossa-discourse.svg?branch=master)](https://travis-ci.org/alexandermendes/pybossa-discourse)
+[![Coverage Status](https://coveralls.io/repos/alexandermendes/pybossa-discourse/badge.svg)](https://coveralls.io/github/alexandermendes/pybossa-discourse?branch=master)
+[![Documentation Status](https://readthedocs.org/projects/pybossa-discourse/badge/?version=latest)](http://pybossa-discourse.readthedocs.org/en/latest/?badge=latest)
 
 A PyBossa plugin for Discourse integration.
 
