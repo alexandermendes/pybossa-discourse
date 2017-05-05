@@ -42,7 +42,7 @@ class DiscourseGlobals(object):
         if not category:
             abort(404)
         embed_url = url_for('project.project_cat_index',
-                            category=category.short_name)
+                            category=category.short_name, _external=True)
         return self._comment_feed_markup(embed_url)
 
     def comments(self, embedUrl=None):
