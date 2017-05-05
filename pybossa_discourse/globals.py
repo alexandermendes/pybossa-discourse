@@ -14,7 +14,7 @@ class DiscourseGlobals(object):
         self.api = discourse_client
         app.jinja_env.globals.update(discourse=self)
 
-    def _comment_feed_markup(embed_url):
+    def _comment_feed_markup(self, embed_url):
         """Return an HTML snippet used to embed Discourse comments."""
         return Markup("""
             <div id="discourse-comments"></div>
@@ -43,13 +43,13 @@ class DiscourseGlobals(object):
             abort(404)
         embed_url = url_for('project.project_cat_index',
                             category=category.short_name)
-        return _comment_feed_markup(embed_url)
+        return self._comment_feed_markup(embed_url)
 
     def comments(self, embedUrl=None):
         """Return an HTML snippet used to embed Discourse comments."""
         if not embedUrl:
             embedUrl = request.base_url
-        return _comment_feed_markup(embed_url)
+        return self._comment_feed_markup(embed_url)
 
     def notifications(self):
         """Return a count of unread notifications for the current user."""
