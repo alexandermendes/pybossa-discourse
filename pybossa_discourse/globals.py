@@ -1,7 +1,8 @@
 # -*- coding: utf8 -*-
 """Jinja globals module for pybossa-discourse."""
 
-from flask import Markup, request
+from flask import Markup, request, abort, url_for
+from pybossa.core import project_repo
 from . import discourse_client
 
 
@@ -12,11 +13,9 @@ class DiscourseGlobals(object):
         self.url = app.config['DISCOURSE_URL']
         self.api = discourse_client
         app.jinja_env.globals.update(discourse=self)
-
-    def comments(self, embedUrl=None):
+    
+    def _comment_feed_markup(embed_url):
         """Return an HTML snippet used to embed Discourse comments."""
-        if not embedUrl:
-            embedUrl = request.base_url
         return Markup("""
             <div id="discourse-comments"></div>
             <script type="text/javascript">
@@ -35,7 +34,22 @@ class DiscourseGlobals(object):
                     (head || body).appendChild(d);
                 }}
             </script>
-        """).format(self.url, embedUrl)
+        """).format(self.url, embed_url)
+    
+    def category_comments(self, category_id):
+        """Embed Discourse comments for a particular category."""
+        category = project_repo.get_category(category_id)
+        if not category:
+            abort(404)
+        embed_url = url_for('project.project_cat_index', 
+                            category=category.short_name)
+        return _comment_feed_markup(embed_url)
+
+    def comments(self, embedUrl=None):
+        """Return an HTML snippet used to embed Discourse comments."""
+        if not embedUrl:
+            embedUrl = request.base_url
+        return _comment_feed_markup(embed_url)
 
     def notifications(self):
         """Return a count of unread notifications for the current user."""
