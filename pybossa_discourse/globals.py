@@ -13,7 +13,7 @@ class DiscourseGlobals(object):
         self.url = app.config['DISCOURSE_URL']
         self.api = discourse_client
         app.jinja_env.globals.update(discourse=self)
-    
+
     def _comment_feed_markup(embed_url):
         """Return an HTML snippet used to embed Discourse comments."""
         return Markup("""
@@ -35,13 +35,13 @@ class DiscourseGlobals(object):
                 }}
             </script>
         """).format(self.url, embed_url)
-    
+
     def category_comments(self, category_id):
         """Embed Discourse comments for a particular category."""
         category = project_repo.get_category(category_id)
         if not category:
             abort(404)
-        embed_url = url_for('project.project_cat_index', 
+        embed_url = url_for('project.project_cat_index',
                             category=category.short_name)
         return _comment_feed_markup(embed_url)
 
