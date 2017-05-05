@@ -121,17 +121,21 @@ To embed Discourse comments in your PyBossa theme:
         {{ discourse.comments() }}
     {% endif %}
 
-The above function takes a single optional parameter that specifies the URL of the page that is embedding the comment
-feed. By default this is set to the URL of the current page. The first time that someone the page a new topic will be 
-created based on that URL.
+The above function takes a single optional parameter that specifies the URL of the page that will be
+crawled to create a topic. By default this is set to the URL of the page where the snippet is embedded.
 
-So, if you wanted to create a new topic for each category and embed that topic in various different places you might do this:
+
+You can also create a new topic by category ID and embed these comments on multiple pages using this snippet:
 
 .. code-block:: HTML+Django
 
     {% if 'pybossa_discourse' in plugins %}
-        {{ discourse.comments(url_for('project.project_cat_index', category=short_name)) }}
+        {{ discourse.category_comments(1) }}
     {% endif %}
+
+The pages that will be crawled to create these topics are those at::
+
+    http://{pybossa-site-url}/project/category/{category-short-name}
 
 
 API variable
