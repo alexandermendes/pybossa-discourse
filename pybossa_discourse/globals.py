@@ -49,7 +49,7 @@ class DiscourseGlobals(object):
         """Return an HTML snippet used to embed Discourse comments."""
         if not embedUrl:
             embedUrl = request.base_url
-        return self._comment_feed_markup(embed_url)
+        return self._comment_feed_markup(embedUrl)
 
     def notifications(self):
         """Return a count of unread notifications for the current user."""
